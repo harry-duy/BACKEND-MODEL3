@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "BookController",urlPatterns = "/book")
+@WebServlet(name = "BookController",urlPatterns = {"/book", "/"})
 public class BookController extends HttpServlet {
     private BookService bookService = new BookService();
 
