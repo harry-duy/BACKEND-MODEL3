@@ -1,6 +1,6 @@
 package model;
 
-public class Customer {
+public class  Customer {
     private int id;
     private int userId;
     private String fullName;
