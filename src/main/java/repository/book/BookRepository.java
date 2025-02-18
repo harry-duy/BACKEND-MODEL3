@@ -1,7 +1,7 @@
 package repository.book;
 
 import model.Book;
-import repository.DBRepository;
+import repository.connection.DBRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

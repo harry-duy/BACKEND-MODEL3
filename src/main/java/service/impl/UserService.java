@@ -1,14 +1,19 @@
 package service.impl;
 
+import model.User;
+import org.mindrot.jbcrypt.BCrypt;
+import repository.user.UserRepository;
 import service.IService;
+
 
 import java.util.List;
 
-public class OrderService implements IService {
+public class UserService implements IService {
+    private final UserRepository userRepository = new UserRepository();
 
     @Override
-    public List getAll() {
-        return null;
+    public List<User> getAll() {
+        return userRepository.getAllUsers(); // ✅ Gọi phương thức thông qua đối tượng
     }
 
     @Override
@@ -30,4 +35,6 @@ public class OrderService implements IService {
     public List findByName(String name) {
         return null;
     }
+
+
 }

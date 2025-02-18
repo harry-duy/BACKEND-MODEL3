@@ -19,7 +19,7 @@ public class BookController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Book> books = bookService.getAll();
         req.setAttribute("books",books);
-        req.getRequestDispatcher("WEB-INF/view/listbook.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/view/book/listbook.jsp").forward(req, resp);
     }
 
 }
