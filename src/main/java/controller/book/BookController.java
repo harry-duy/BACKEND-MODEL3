@@ -13,7 +13,7 @@ import java.util.List;
 
 @WebServlet(name = "BookController",urlPatterns = {"/book", "/"})
 public class BookController extends HttpServlet {
-    private BookService bookService = new BookService();
+    private final BookService bookService = new BookService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
