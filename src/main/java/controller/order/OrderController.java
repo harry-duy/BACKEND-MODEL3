@@ -13,10 +13,10 @@ import java.util.List;
 
 @WebServlet(name = "OrderController",urlPatterns = "/orderpage")
 public class OrderController extends HttpServlet {
-    private OrderService orderService = new OrderService();
+    private OrderService OrderService = new OrderService();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Order> orders = orderService.getAll();
+        List<Order> orders = OrderService.getAll();
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("WEB-INF/view/orderpage.jsp").forward(request, response);
     }

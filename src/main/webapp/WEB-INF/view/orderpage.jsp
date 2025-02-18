@@ -13,39 +13,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thanh toán</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+
+        /*body {*/
+        /*    padding-top: 70px; !* Tạo khoảng trống để tránh navbar che mất nội dung *!*/
+        /*}*/
+
+        /* Màu chủ đạo */
+        .navbar, footer {
+            background-color: #ff7f00 !important; /* Màu cam */
+        }
+
+        .navbar .nav-link {
+            color: white !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: #ffd700 !important; /* Màu vàng nhạt */
+        }
+
+        .btn-danger {
+            background-color: #ff7f00 !important; /* Màu cam */
+            border-color: #ff7f00 !important;
+        }
+
+        .btn-danger:hover {
+            background-color: #e67300 !important; /* Màu cam đậm */
+            border-color: #e67300 !important;
+        }
+
+        .card {
+            border-color: #ff7f00 !important;
+        }
+
+        h4, h5 {
+            color: #ff7f00 !important;
+        }
+
+        .header-logo {
+            height: 60px;
+        }
+
+        /* Ô tìm kiếm */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 2px solid #FFA500;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background-color: #FFA500;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-btn i {
+            font-size: 18px;
+        }
+
+
+        .header-account {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFA500;
+            transition: color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-account i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header-account:hover {
+            color: #FF8C00;
+        }
+
+        .payment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: orange;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .payment i {
+            font-size: 24px; /* Kích thước biểu tượng */
+            margin-bottom: 5px; /* Khoảng cách giữa icon và chữ */
+        }
+
+        .payment:hover {
+            color: darkorange; /* Màu cam đậm khi hover */
+        }
+
+
+    </style>
 
 
 </head>
 <body>
 
 <!-- Thanh Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<header class="custom-header">
     <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="https://via.placeholder.com/100x40" alt="Logo" class="img-fluid">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="row align-items-center justify-content-between ">
+            <div class="col-auto">
+                <a href="/book">
+                    <img src="https://beedesign.com.vn/wp-content/uploads/2020/08/logo-nha-sach-Viet.jpg" alt="Logo" class="header-logo">
+                </a>
+            </div>
 
-        <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm...">
-            <button class="search-btn">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
+            <div class="col-md-6">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm...">
+                    <button class="search-btn">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Sản phẩm</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
-            </ul>
+            <div class="col-auto">
+                <a href="/login" class="header-account">
+                    <i class="bi bi-person-fill"></i>
+                    <span style="margin-top: -10px">Tài khoản</span>
+                </a>
+            </div>
+
+            <div class="col-auto">
+                <a href="/orderpage" class="payment">
+                    <i class="bi bi-cart-fill"></i>
+                    <span style="margin-top: -10px">Thanh toán</span>
+                </a>
+            </div>
         </div>
     </div>
-</nav>
+</header>
 
-<!-- Nội dung chính -->
+    <!-- Nội dung chính -->
 <div class="container mt-4">
     <div class="row">
 
