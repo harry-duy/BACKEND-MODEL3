@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBRepository  {
+public class DBRepository {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/bookstoredb";
     private static final String jdbcUsername = "root";
-    private static final String jdbcPassword = "admin4320";
+    private static final String jdbcPassword = "159357bapD";
     private static Connection connection;
 
     static {
