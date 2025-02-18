@@ -258,36 +258,20 @@
     <!-- Đăng ký -->
     <div class="register-box">
       <h2>Đăng ký thành viên</h2>
-      <form>
+      <form action="register" method="post">
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" class="form-control" placeholder="Họ tên *">
+          <input type="text" class="form-control" name="username" placeholder="Họ tên *" required>
         </div>
 
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input type="email" class="form-control" placeholder="Email *">
-        </div>
-
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-          <input type="text" class="form-control" placeholder="Số điện thoại *">
+          <input type="email" class="form-control" name="email" placeholder="Email *" required>
         </div>
 
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" class="form-control" placeholder="Mật khẩu *" id="register-password">
-          <span class="input-group-text password-toggle" onclick="togglePassword('register-password')">
-                    <i class="bi bi-eye"></i>
-                </span>
-        </div>
-
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" class="form-control" placeholder="Nhập lại mật khẩu *" id="confirm-password">
-          <span class="input-group-text password-toggle" onclick="togglePassword('confirm-password')">
-                    <i class="bi bi-eye"></i>
-                </span>
+          <input type="password" class="form-control" name="password" placeholder="Mật khẩu *" required>
         </div>
 
         <button type="submit" class="btn btn-register mt-3">Đăng Ký</button>
