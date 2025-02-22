@@ -3,8 +3,7 @@ package repository.user;
 
 import model.Role;
 import model.User;
-import org.mindrot.jbcrypt.BCrypt;
-import repository.connection.DBRepository;
+import repository.DBRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

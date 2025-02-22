@@ -12,14 +12,14 @@ public class OrderDetail {
     private String ward;
     private String street;
     private String noteOrder;
-    private String paymentMethod; // Enum dạng String
+    private String paymentMethod;
+    private String status; // Thêm trạng thái
 
-    // Constructors
-    public OrderDetail() {
-    }
-
-    public OrderDetail(int id, int orderId, int bookId, int quantity, String fullName, String phoneNumber,
-                       String provinceCity, String district, String ward, String street, String noteOrder, String paymentMethod) {
+    // Constructor đầy đủ
+    public OrderDetail(int id, int orderId, int bookId, int quantity,
+                       String fullName, String phoneNumber, String provinceCity,
+                       String district, String ward, String street,
+                       String noteOrder, String paymentMethod, String status) {
         this.id = id;
         this.orderId = orderId;
         this.bookId = bookId;
@@ -32,9 +32,15 @@ public class OrderDetail {
         this.street = street;
         this.noteOrder = noteOrder;
         this.paymentMethod = paymentMethod;
+        this.status = status;
     }
 
-    // Getters and Setters
+    public String getAddress() {
+        return street + ", " + ward + ", " + district + ", " + provinceCity;
+    }
+
+
+    // Getters và Setters
     public int getId() {
         return id;
     }
@@ -131,21 +137,11 @@ public class OrderDetail {
         this.paymentMethod = paymentMethod;
     }
 
-    @Override
-    public String toString() {
-        return "OrderDetail{" +
-                "id=" + id +
-                ", orderId=" + orderId +
-                ", bookId=" + bookId +
-                ", quantity=" + quantity +
-                ", fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", provinceCity='" + provinceCity + '\'' +
-                ", district='" + district + '\'' +
-                ", ward='" + ward + '\'' +
-                ", street='" + street + '\'' +
-                ", noteOrder='" + noteOrder + '\'' +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                '}';
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

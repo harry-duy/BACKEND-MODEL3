@@ -1,7 +1,8 @@
 package repository.order;
 
+import model.Order;
 import model.OrderDetail;
-import repository.connection.DBRepository;
+import repository.DBRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class OrderRepository {
 
-    public static List<OrderDetail> findAllOrderDetails() {
+//    public static List<OrderDetail> findAllOrderDetails() {
 //        List<OrderDetail> orderDetails = new ArrayList<>();
 //        try {
 //            Statement statement = DBRepository.getConnection().createStatement();
@@ -31,6 +32,5 @@ public class OrderRepository {
 //            throw new RuntimeException("Lỗi khi lấy danh sách chi tiết đơn hàng", e);
 //        }
 //        return orderDetails;
-        return null;
-    }
+//    }
 }

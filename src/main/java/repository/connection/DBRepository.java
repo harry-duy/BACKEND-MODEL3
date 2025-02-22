@@ -1,4 +1,4 @@
-package repository.connection;
+package repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,13 +20,6 @@ public class DBRepository  {
     }
 
     public static Connection getConnection() {
-        try {
-            if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return connection;
     }
 }

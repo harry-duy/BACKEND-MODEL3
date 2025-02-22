@@ -8,7 +8,7 @@ public class OrderService implements IService {
 
     @Override
     public List getAll() {
-        return null;
+        return List.of();
     }
 
     @Override
@@ -28,6 +28,6 @@ public class OrderService implements IService {
 
     @Override
     public List findByName(String name) {
-        return null;
+        return List.of();
     }
 }
