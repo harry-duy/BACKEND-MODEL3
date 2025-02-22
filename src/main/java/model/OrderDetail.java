@@ -5,20 +5,42 @@ public class OrderDetail {
     private int orderId;
     private int bookId;
     private int quantity;
+    private String fullName;
+    private String phoneNumber;
+    private String provinceCity;
+    private String district;
+    private String ward;
+    private String street;
     private String noteOrder;
     private String paymentMethod;
+    private String status; // Thêm trạng thái
 
-    public OrderDetail() {}
-
-    public OrderDetail(int id, int orderId, int bookId, int quantity, String noteOrder, String paymentMethod) {
+    // Constructor đầy đủ
+    public OrderDetail(int id, int orderId, int bookId, int quantity,
+                       String fullName, String phoneNumber, String provinceCity,
+                       String district, String ward, String street,
+                       String noteOrder, String paymentMethod, String status) {
         this.id = id;
         this.orderId = orderId;
         this.bookId = bookId;
         this.quantity = quantity;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.provinceCity = provinceCity;
+        this.district = district;
+        this.ward = ward;
+        this.street = street;
         this.noteOrder = noteOrder;
         this.paymentMethod = paymentMethod;
+        this.status = status;
     }
 
+    public String getAddress() {
+        return street + ", " + ward + ", " + district + ", " + provinceCity;
+    }
+
+
+    // Getters và Setters
     public int getId() {
         return id;
     }
@@ -51,6 +73,54 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getProvinceCity() {
+        return provinceCity;
+    }
+
+    public void setProvinceCity(String provinceCity) {
+        this.provinceCity = provinceCity;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getWard() {
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
     public String getNoteOrder() {
         return noteOrder;
     }
@@ -66,5 +136,12 @@ public class OrderDetail {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-}
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}

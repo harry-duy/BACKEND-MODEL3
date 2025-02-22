@@ -1,7 +1,7 @@
 package controller.order;
 
 import model.Order;
-import service.impl.OrderService;
+import service.impl.order.OrderService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
