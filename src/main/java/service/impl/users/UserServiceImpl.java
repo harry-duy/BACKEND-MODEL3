@@ -1,7 +1,8 @@
 package service.impl.users;
 
 import model.User;
-import repository.DBRepository;
+
+import repository.connection.DBRepository;
 import service.IService;
 
 import java.sql.*;

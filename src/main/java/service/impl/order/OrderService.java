@@ -4,7 +4,8 @@ import dao.OrderDAO;
 import dao.OrderDetailDAO; // Thêm DAO nếu cần cho OrderDetail
 import model.Order;
 import model.OrderDetail;
-import repository.DBRepository;
+
+import repository.connection.DBRepository;
 import repository.order.OrderRepository;
 import service.IService;
 

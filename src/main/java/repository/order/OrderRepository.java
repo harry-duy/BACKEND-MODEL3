@@ -2,8 +2,6 @@ package repository.order;
 
 import model.Order;
 import model.OrderDetail;
-import repository.DBRepository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

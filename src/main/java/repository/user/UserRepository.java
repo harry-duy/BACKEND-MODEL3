@@ -3,7 +3,8 @@ package repository.user;
 
 import model.Role;
 import model.User;
-import repository.DBRepository;
+import repository.connection.DBRepository;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

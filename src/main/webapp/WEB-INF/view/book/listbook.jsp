@@ -203,50 +203,139 @@
         .payment:hover {
             color: darkorange; /* Màu cam đậm khi hover */
         }
+        .custom-header {
+            background-color: white;
+            padding: 10px 0;
+            border-bottom: 2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex; /* Dùng Flexbox */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: space-between; /* Dàn đều các phần tử */
+            padding: 0 20px;
+        }
+
+        .header-logo {
+            height: 60px;
+        }
+
+        /* Ô tìm kiếm */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 2px solid #FFA500;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            max-width: 500px;
+            flex-grow: 1; /* Cho phép mở rộng */
+            margin: 0 20px; /* Tạo khoảng cách giữa logo và các nút bên phải */
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background-color: #FFA500;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-btn i {
+            font-size: 18px;
+        }
+
+        /* Các nút bên phải */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px; /* Khoảng cách giữa các nút */
+        }
+
+        .header-account,
+        .payment,
+        .manage {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFA500;
+            transition: color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-account i,
+        .payment i,
+        .manage i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header-account:hover,
+        .payment:hover,
+        .manage:hover {
+            color: #FF8C00;
+        }
+
 
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
 <header class="custom-header">
     <div class="container">
-        <div class="row align-items-center justify-content-between">
-            <div class="col-auto">
-                <a href="/book">
-                    <img src="https://beedesign.com.vn/wp-content/uploads/2020/08/logo-nha-sach-Viet.jpg" alt="Logo" class="header-logo">
+        <!-- Logo -->
+        <div>
+            <a href="/book">
+                <img src="https://beedesign.com.vn/wp-content/uploads/2020/08/logo-nha-sach-Viet.jpg" alt="Logo" class="header-logo">
+            </a>
+        </div>
+
+        <!-- Ô tìm kiếm -->
+        <form action="/book" method="GET" class="search-bar">
+            <input type="hidden" name="type" value="title">
+            <input type="text" class="search-input" name="query" placeholder="Tìm kiếm sách theo tên...">
+            <button type="submit" class="search-btn">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+
+        <!-- Các nút bên phải -->
+        <div class="header-right">
+            <c:if test="${empty sessionScope.user}">
+                <a href="/login" class="header-account">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Tài khoản</span>
                 </a>
-            </div>
+            </c:if>
 
-            <div class="col-md-6">
-                <form action="/book" method="GET" class="search-bar">
-                    <input type="hidden" name="type" value="title">
-                    <input type="text" class="search-input" name="query" placeholder="Tìm kiếm sách theo tên...">
-                    <button type="submit" class="search-btn">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </form>
-            </div>
-
-            <div class="col-auto">
-                <c:if test="${empty sessionScope.user}">
-                    <a href="/login" class="header-account">
-                        <i class="bi bi-person-fill"></i>
-                        <span style="margin-top: -10px">Tài khoản</span>
-                    </a>
-                </c:if>
-
-                <c:if test="${not empty sessionScope.user}">
-                    <a href="/logout" class="header-account">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span style="margin-top: -10px">Đăng xuất</span>
-                    </a>
-                </c:if>
-            </div>
-            <div class="col-auto">
-                <a href="/orderpage" class="payment">
-                    <i class="bi bi-cart-fill"></i>
-                    <span style="margin-top: -10px">Thanh toán</span>
+            <c:if test="${not empty sessionScope.user}">
+                <a href="/logout" class="header-account">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
                 </a>
-            </div>
+            </c:if>
+
+            <a href="/manage" class="manage">
+                <i class="bi bi-list"></i>
+                <span>Quản lý</span>
+            </a>
+
+            <a href="/orderpage" class="payment">
+                <i class="bi bi-cart-fill"></i>
+                <span>Thanh toán</span>
+            </a>
         </div>
     </div>
 </header>
