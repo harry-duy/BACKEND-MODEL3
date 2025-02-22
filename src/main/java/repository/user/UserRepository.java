@@ -1,6 +1,7 @@
 package repository.user;
 
 
+import model.Role;
 import model.User;
 import org.mindrot.jbcrypt.BCrypt;
 import repository.connection.DBRepository;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
+    private static final String GET_USER_BY_USERNAME_PASSWORD =
+            "SELECT * FROM users WHERE username = ? AND password = ?";
     private static final String INSERT_USER_SQL = "INSERT INTO user (username, password, email, roleId) VALUES (?, ?, ?, ?)";
 
     public void saveUser(User user) {
@@ -27,42 +30,6 @@ public class UserRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    public User getUserByUsername(String username) {
-        User user = null;
-        String query = "SELECT id, username, password, email, role_id FROM users WHERE username = ?";
-
-        try (Connection conn = DBRepository.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, username);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    user = new User(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"), // Lấy mật khẩu đã mã hóa
-                            rs.getString("email"),
-                            rs.getInt("role_id")
-                    );
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
-    public User getUserByUsernameAndPassword(String username, String password) {
-        User user = getUserByUsername(username);
-        if (user == null) {
-            return null; // Trả về null ngay lập tức nếu không tìm thấy user
-        }
-        if (BCrypt.checkpw(password, user.getPassword())) {
-            return user;
-        }
-        return null;
     }
 
     public List<User> getAllUsers() {
@@ -88,6 +55,32 @@ public class UserRepository {
         }
         return users;
     }
+    public User login(String username, String password) {
+        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+        try (Connection connection = DBRepository.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("email"),
+                        resultSet.getInt("role_id")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
+
 

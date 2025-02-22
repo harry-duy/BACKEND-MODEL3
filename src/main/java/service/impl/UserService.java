@@ -4,11 +4,12 @@ import model.User;
 import org.mindrot.jbcrypt.BCrypt;
 import repository.user.UserRepository;
 import service.IService;
+import service.IUserService;
 
 
 import java.util.List;
 
-public class UserService implements IService {
+public class UserService implements IService , IUserService {
     private final UserRepository userRepository = new UserRepository();
 
     @Override
@@ -37,4 +38,8 @@ public class UserService implements IService {
     }
 
 
+    @Override
+    public User login(String userName, String password) {
+        return userRepository.login(userName,password);
+    }
 }

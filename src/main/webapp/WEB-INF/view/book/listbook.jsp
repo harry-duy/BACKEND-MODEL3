@@ -186,6 +186,23 @@
         .header-account:hover {
             color: #FF8C00;
         }
+        .payment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: orange;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .payment i {
+            font-size: 24px; /* Kích thước biểu tượng */
+            margin-bottom: 5px; /* Khoảng cách giữa icon và chữ */
+        }
+
+        .payment:hover {
+            color: darkorange; /* Màu cam đậm khi hover */
+        }
 
     </style>
 </head>
@@ -200,18 +217,34 @@
             </div>
 
             <div class="col-md-6">
-                <div class="search-bar">
-                    <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm...">
-                    <button class="search-btn">
+                <form action="/book" method="GET" class="search-bar">
+                    <input type="hidden" name="type" value="title">
+                    <input type="text" class="search-input" name="query" placeholder="Tìm kiếm sách theo tên...">
+                    <button type="submit" class="search-btn">
                         <i class="bi bi-search"></i>
                     </button>
-                </div>
+                </form>
             </div>
 
             <div class="col-auto">
-                <a href="/login" class="header-account">
-                    <i class="bi bi-person-fill"></i>
-                    <span style="margin-top: -10px">Tài khoản</span>
+                <c:if test="${empty sessionScope.user}">
+                    <a href="/login" class="header-account">
+                        <i class="bi bi-person-fill"></i>
+                        <span style="margin-top: -10px">Tài khoản</span>
+                    </a>
+                </c:if>
+
+                <c:if test="${not empty sessionScope.user}">
+                    <a href="/logout" class="header-account">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span style="margin-top: -10px">Đăng xuất</span>
+                    </a>
+                </c:if>
+            </div>
+            <div class="col-auto">
+                <a href="/orderpage" class="payment">
+                    <i class="bi bi-cart-fill"></i>
+                    <span style="margin-top: -10px">Thanh toán</span>
                 </a>
             </div>
         </div>
@@ -266,25 +299,20 @@
         <!-- Sidebar -->
         <div class="col-lg-3">
             <div class="sidebar">
-                <h4>NHÓM SẢN PHẨM</h4>
+                <h4>Tác giả</h4>
                 <ul class="list-unstyled">
-                    <li><a href="#">Sách tiếng Việt</a></li>
-                    <li><a href="#">Thiếu Nhi</a></li>
-                    <li><a href="#">Giáo Khoa - Tham Khảo</a></li>
-                    <li><a href="#">Văn Học</a></li>
-
-                    <li><a href="#">Tâm Lý - Kỹ Năng Sống</a></li>
-
-                    <li><a href="#">Kinh Tế</a></li>
-
+                    <li><a href="/book?type=author&query=Nam Cao">Nam Cao</a></li>
+                    <li><a href="/book?type=author&query=Vũ Trọng Phụng">Vũ Trọng Phụng</a></li>
+                    <li><a href="/book?type=author&query=Nguyễn Nhật Ánh">Nguyễn Nhật Ánh</a></li>
+                    <li><a href="/book?type=foreign_author">Tác giả nước ngoài</a></li>
                 </ul>
+
                 <h4>GIÁ</h4>
                 <ul class="list-unstyled">
-                    <li><input type="radio" name="price"> 0đ - 150,000đ</li>
+                    <li><input type="radio" name="price"> 0đ -50,000đ</li>
+                    <li><input type="radio" name="price"> 50,000đ - 100,000đ</li>
+                    <li><input type="radio" name="price"> 100,000đ - 150,000đ</li>
                     <li><input type="radio" name="price"> 150,000đ - 300,000đ</li>
-                    <li><input type="radio" name="price"> 300,000đ - 500,000đ</li>
-                    <li><input type="radio" name="price"> 500,000đ - 700,000đ</li>
-                    <li><input type="radio" name="price"> 700,000đ - Trở Lên</li>
                 </ul>
             </div>
         </div>
