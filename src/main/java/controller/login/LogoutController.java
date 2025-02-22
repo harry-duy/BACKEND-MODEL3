@@ -12,11 +12,11 @@ import java.io.IOException;
 public class LogoutController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false); // Lấy session nếu tồn tại
+        HttpSession session = req.getSession(false);
         if (session != null) {
-            session.invalidate(); // Hủy session khi logout
+            session.invalidate();
         }
-        resp.sendRedirect("login"); // Chuyển hướng về trang đăng nhập
+        resp.sendRedirect("login");
     }
 }
 
