@@ -210,7 +210,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .container {
+        .container1 {
             max-width: 1200px;
             margin: auto;
             display: flex; /* Dùng Flexbox */
@@ -288,13 +288,45 @@
         .manage:hover {
             color: #FF8C00;
         }
+        /* Định dạng dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 180px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            padding: 10px 0;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Khi mở dropdown */
+        .show {
+            display: block;
+        }
+
 
 
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
 <header class="custom-header">
-    <div class="container">
+    <div class="container1">
         <!-- Logo -->
         <div>
             <a href="/book">
@@ -327,10 +359,20 @@
                 </a>
             </c:if>
 
-            <a href="/manage" class="manage">
-                <i class="bi bi-list"></i>
-                <span>Quản lý</span>
-            </a>
+            <c:if test="${sessionScope.roleId == 1}">
+                <div class="dropdown">
+                    <a href="#" class="manage" onclick="toggleDropdown()">
+                        <i class="bi bi-list"></i>
+                        <span>Quản lý</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/users">Quản lý người dùng</a>
+                        <a href="/managementBook">Quản lý sách</a>
+                        <a href="/orderDetails">Quản lý đơn hàng</a>
+                    </div>
+                </div>
+            </c:if>
+
 
             <a href="/orderpage" class="payment">
                 <i class="bi bi-cart-fill"></i>
@@ -385,7 +427,6 @@
 
     <div class="container mt-4">
     <div class="row">
-        <!-- Sidebar -->
         <div class="col-lg-3">
             <div class="sidebar">
                 <h4>Tác giả</h4>
@@ -434,6 +475,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
+<script>
+    function toggleDropdown() {
+        var menu = document.querySelector(".dropdown-menu");
+        menu.classList.toggle("show");
+    }
+</script>
 </body>
 </html>

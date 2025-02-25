@@ -16,11 +16,15 @@ public class LoginController extends HttpServlet {
     private static UserService userService = new UserService();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         request.getRequestDispatcher("WEB-INF/view/login/loginPage.jsp").forward(request, response);
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -30,13 +34,19 @@ public class LoginController extends HttpServlet {
         User user = userService.login(username, password);
         System.out.println("Kết quả trả về từ UserService: " + (user != null ? "Đăng nhập thành công" : "Sai mật khẩu hoặc tài khoản"));
 
+
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            response.sendRedirect("listbook");
-        } else {
-            request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
-            request.getRequestDispatcher("WEB-INF/view/login/loginPage.jsp").forward(request, response);
+            session.setAttribute("roleId", user.getRoleId());
+
+            if (user.getRoleId() == 1) {
+                response.sendRedirect("listBook");
+            } else {
+                response.sendRedirect("listBook");
+            }
+        }else {
+            response.sendRedirect("login");
         }
     }
 }

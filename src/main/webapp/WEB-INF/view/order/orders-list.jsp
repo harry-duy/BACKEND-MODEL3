@@ -2,12 +2,12 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.OrderDetail" %>
 <%@ page import="service.impl.order.OrderService" %>
-<%@ page import="repository.DBRepository" %>
 <%@ page import="service.impl.OrderDetail.OrderDetailService" %>
+<%@ page import="repository.connection.DBRepository" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-  OrderDetailService orderDetailService = new OrderDetailService(DBRepository.getConnection());
+  OrderDetailService orderDetailService = new OrderDetailService(repository.connection.DBRepository.getConnection());
   List<OrderDetail> orderDetails = orderDetailService.getAll();
   request.setAttribute("orderDetails", orderDetails);
 %>

@@ -21,12 +21,11 @@ public class BookService implements IService<Book>, IBookService {
 
     @Override
     public void update(int id, Book o) {
-
     }
 
     @Override
     public Book findById(int id) {
-        return null;
+        return bookRepository.findById(id);
     }
 
     @Override
@@ -42,5 +41,10 @@ public class BookService implements IService<Book>, IBookService {
     @Override
     public List<Book> findByAuthorFr() {
         return bookRepository.findByAuthorFr();
+    }
+
+    @Override
+    public void updateBook(Book book) {
+        bookRepository.update(book);
     }
 }

@@ -5,6 +5,7 @@ import repository.connection.DBRepository;
 
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class BookRepository {
                 String imageURL = resultSet.getString("ImageURL");
                 int quantity = resultSet.getInt("stock_quantity");
                 String description = resultSet.getString("book_description");
-                books.add(new Book(idBook,title,author,price,quantity,imageURL,description));
+                books.add(new Book(idBook,title,author,price,imageURL,quantity,description));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -48,7 +49,7 @@ public class BookRepository {
                 String imageURL = resultSet.getString("ImageURL");
                 int quantity = resultSet.getInt("stock_quantity");
                 String description = resultSet.getString("book_description");
-                books.add(new Book(idBook, title, author, price, quantity, imageURL, description));
+                books.add(new Book(idBook, title, author, price,imageURL, quantity, description));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -71,7 +72,7 @@ public class BookRepository {
                 String imageURL = resultSet.getString("ImageURL");
                 int quantity = resultSet.getInt("stock_quantity");
                 String description = resultSet.getString("book_description");
-                books.add(new Book(idBook, title, authorName, price, quantity, imageURL, description));
+                books.add(new Book(idBook, title, authorName, price,imageURL, quantity, description));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -93,7 +94,7 @@ public class BookRepository {
                 String imageURL = resultSet.getString("ImageURL");
                 int quantity = resultSet.getInt("stock_quantity");
                 String description = resultSet.getString("book_description");
-                books.add(new Book(idBook, title, authorName, price, quantity, imageURL, description));
+                books.add(new Book(idBook, title, authorName, price,imageURL, quantity, description));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -101,4 +102,45 @@ public class BookRepository {
         return books;
     }
 
+    public Book findById(int id) {
+        Book book = null;
+        Connection conn = DBRepository.getConnection();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT id, title, author, price, ImageURL, stock_quantity,  book_description FROM books WHERE id = ?"
+            );
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                Double price = rs.getDouble("price");
+                String image = rs.getString("ImageURL");
+                int stock = rs.getInt("stock_quantity");
+                String description = rs.getString("book_description");
+                book = new Book(id,title , author, price,image, stock, description);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return book;
+    }
+    public void update(Book book) {
+        Connection conn = DBRepository.getConnection();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "UPDATE books SET title = ?,author = ? , price = ?,ImageURL = ?  , stock_quantity = ?, book_description = ?  WHERE id = ?"
+            );
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthor());
+            preparedStatement.setDouble(3, book.getPrice());
+            preparedStatement.setString(4, book.getImageURL());
+            preparedStatement.setInt(5, book.getStockQuantity());
+            preparedStatement.setString(6, book.getBookDescription());
+            preparedStatement.setInt(7, book.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
