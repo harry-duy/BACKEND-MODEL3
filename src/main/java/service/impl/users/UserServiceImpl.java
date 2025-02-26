@@ -1,5 +1,6 @@
 package service.impl.users;
 
+import model.Order;
 import model.User;
 
 import repository.connection.DBRepository;
@@ -67,6 +68,11 @@ public class UserServiceImpl implements IService<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(int id, Order o) {
+
     }
 
     // Tìm người dùng theo ID

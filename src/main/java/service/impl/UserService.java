@@ -1,5 +1,6 @@
 package service.impl;
 
+import model.Order;
 import model.User;
 import org.mindrot.jbcrypt.BCrypt;
 import repository.user.UserRepository;
@@ -24,6 +25,11 @@ public class UserService implements IService , IUserService {
 
     @Override
     public void update(int id, Object o) {
+
+    }
+
+    @Override
+    public void update(int id, Order o) {
 
     }
 
