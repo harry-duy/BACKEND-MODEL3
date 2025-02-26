@@ -27,7 +27,7 @@ public class UserController extends HttpServlet {
 
         request.setAttribute("users", users);
         request.setAttribute("searchQuery", searchQuery);
-        request.getRequestDispatcher("WEB-INF/view/list-users.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/view/user/list-users.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

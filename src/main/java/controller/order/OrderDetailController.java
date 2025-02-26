@@ -1,8 +1,9 @@
 package controller.order;
 
 import model.OrderDetail;
+import repository.connection.DBRepository;
 import service.impl.OrderDetail.OrderDetailService;
-import repository.DBRepository;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,7 +51,7 @@ public class OrderDetailController extends HttpServlet {
             throws ServletException, IOException {
         List<OrderDetail> orderDetails = orderDetailService.getAll();
         request.setAttribute("orderDetails", orderDetails);
-        request.getRequestDispatcher("WEB-INF/view/orders-list.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/view/order/orders-list.jsp").forward(request, response);
     }
 
     private void deleteOrderDetail(HttpServletRequest request, HttpServletResponse response)

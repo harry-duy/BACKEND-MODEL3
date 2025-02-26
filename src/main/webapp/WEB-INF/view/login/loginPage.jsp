@@ -230,25 +230,18 @@
     <!-- Đăng nhập -->
     <div class="login-box">
       <h2>Đăng nhập</h2>
-      <form>
+      <form action="/login" method="post">
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input type="text" class="form-control" placeholder="Email/Số điện thoại *">
+          <input type="text" class="form-control" name="username" placeholder="Email/Số điện thoại *" required>
         </div>
 
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" class="form-control" placeholder="Mật khẩu *" id="login-password">
+          <input type="password" class="form-control" name="password" placeholder="Mật khẩu *" id="login-password" required>
           <span class="input-group-text password-toggle" onclick="togglePassword('login-password')">
             <i class="bi bi-eye"></i>
-          </span>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center">
-          <label class="remember-me">
-            <input type="checkbox"> Ghi nhớ đăng nhập
-          </label>
-          <a href="#" class="forgot-password">Quên mật khẩu?</a>
+        </span>
         </div>
 
         <button type="submit" class="btn btn-login mt-3">Đăng nhập</button>

@@ -186,34 +186,198 @@
         .header-account:hover {
             color: #FF8C00;
         }
+        .payment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: orange;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .payment i {
+            font-size: 24px; /* Kích thước biểu tượng */
+            margin-bottom: 5px; /* Khoảng cách giữa icon và chữ */
+        }
+
+        .payment:hover {
+            color: darkorange; /* Màu cam đậm khi hover */
+        }
+        .custom-header {
+            background-color: white;
+            padding: 10px 0;
+            border-bottom: 2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .container1 {
+            max-width: 1200px;
+            margin: auto;
+            display: flex; /* Dùng Flexbox */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: space-between; /* Dàn đều các phần tử */
+            padding: 0 20px;
+        }
+
+        .header-logo {
+            height: 60px;
+        }
+
+        /* Ô tìm kiếm */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 2px solid #FFA500;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            max-width: 500px;
+            flex-grow: 1; /* Cho phép mở rộng */
+            margin: 0 20px; /* Tạo khoảng cách giữa logo và các nút bên phải */
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background-color: #FFA500;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-btn i {
+            font-size: 18px;
+        }
+
+        /* Các nút bên phải */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px; /* Khoảng cách giữa các nút */
+        }
+
+        .header-account,
+        .payment,
+        .manage {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFA500;
+            transition: color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-account i,
+        .payment i,
+        .manage i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header-account:hover,
+        .payment:hover,
+        .manage:hover {
+            color: #FF8C00;
+        }
+        /* Định dạng dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 180px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            padding: 10px 0;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Khi mở dropdown */
+        .show {
+            display: block;
+        }
+
+
 
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
 <header class="custom-header">
-    <div class="container">
-        <div class="row align-items-center justify-content-between">
-            <div class="col-auto">
-                <a href="/book">
-                    <img src="https://beedesign.com.vn/wp-content/uploads/2020/08/logo-nha-sach-Viet.jpg" alt="Logo" class="header-logo">
-                </a>
-            </div>
+    <div class="container1">
+        <!-- Logo -->
+        <div>
+            <a href="/book">
+                <img src="https://beedesign.com.vn/wp-content/uploads/2020/08/logo-nha-sach-Viet.jpg" alt="Logo" class="header-logo">
+            </a>
+        </div>
 
-            <div class="col-md-6">
-                <div class="search-bar">
-                    <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm...">
-                    <button class="search-btn">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </div>
+        <!-- Ô tìm kiếm -->
+        <form action="/book" method="GET" class="search-bar">
+            <input type="hidden" name="type" value="title">
+            <input type="text" class="search-input" name="query" placeholder="Tìm kiếm sách theo tên...">
+            <button type="submit" class="search-btn">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
 
-            <div class="col-auto">
+        <!-- Các nút bên phải -->
+        <div class="header-right">
+            <c:if test="${empty sessionScope.user}">
                 <a href="/login" class="header-account">
                     <i class="bi bi-person-fill"></i>
-                    <span style="margin-top: -10px">Tài khoản</span>
+                    <span>Tài khoản</span>
                 </a>
-            </div>
+            </c:if>
+
+            <c:if test="${not empty sessionScope.user}">
+                <a href="/logout" class="header-account">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </c:if>
+
+            <c:if test="${sessionScope.roleId == 1}">
+                <div class="dropdown">
+                    <a href="#" class="manage" onclick="toggleDropdown()">
+                        <i class="bi bi-list"></i>
+                        <span>Quản lý</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/users">Quản lý người dùng</a>
+                        <a href="/managementBook">Quản lý sách</a>
+                        <a href="/orderDetails">Quản lý đơn hàng</a>
+                    </div>
+                </div>
+            </c:if>
+
+
+            <a href="/orderpage" class="payment">
+                <i class="bi bi-cart-fill"></i>
+                <span>Thanh toán</span>
+            </a>
         </div>
     </div>
 </header>
@@ -263,28 +427,22 @@
 
     <div class="container mt-4">
     <div class="row">
-        <!-- Sidebar -->
         <div class="col-lg-3">
             <div class="sidebar">
-                <h4>NHÓM SẢN PHẨM</h4>
+                <h4>Tác giả</h4>
                 <ul class="list-unstyled">
-                    <li><a href="#">Sách tiếng Việt</a></li>
-                    <li><a href="#">Thiếu Nhi</a></li>
-                    <li><a href="#">Giáo Khoa - Tham Khảo</a></li>
-                    <li><a href="#">Văn Học</a></li>
-
-                    <li><a href="#">Tâm Lý - Kỹ Năng Sống</a></li>
-
-                    <li><a href="#">Kinh Tế</a></li>
-
+                    <li><a href="/book?type=author&query=Nam Cao">Nam Cao</a></li>
+                    <li><a href="/book?type=author&query=Vũ Trọng Phụng">Vũ Trọng Phụng</a></li>
+                    <li><a href="/book?type=author&query=Nguyễn Nhật Ánh">Nguyễn Nhật Ánh</a></li>
+                    <li><a href="/book?type=foreign_author">Tác giả nước ngoài</a></li>
                 </ul>
+
                 <h4>GIÁ</h4>
                 <ul class="list-unstyled">
-                    <li><input type="radio" name="price"> 0đ - 150,000đ</li>
+                    <li><input type="radio" name="price"> 0đ -50,000đ</li>
+                    <li><input type="radio" name="price"> 50,000đ - 100,000đ</li>
+                    <li><input type="radio" name="price"> 100,000đ - 150,000đ</li>
                     <li><input type="radio" name="price"> 150,000đ - 300,000đ</li>
-                    <li><input type="radio" name="price"> 300,000đ - 500,000đ</li>
-                    <li><input type="radio" name="price"> 500,000đ - 700,000đ</li>
-                    <li><input type="radio" name="price"> 700,000đ - Trở Lên</li>
                 </ul>
             </div>
         </div>
@@ -317,6 +475,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
+<script>
+    function toggleDropdown() {
+        var menu = document.querySelector(".dropdown-menu");
+        menu.classList.toggle("show");
+    }
+</script>
 </body>
 </html>

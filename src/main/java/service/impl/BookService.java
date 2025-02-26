@@ -1,15 +1,17 @@
 package service.impl;
 
+import model.Book;
 import repository.book.BookRepository;
+import service.IBookService;
 import service.IService;
 
 import java.util.List;
 
-public class BookService implements IService {
+public class BookService implements IService<Book>, IBookService {
     private static BookRepository bookRepository = new BookRepository();
     @Override
-    public List getAll() {
-        return BookRepository.findAll();
+    public List<Book> getAll() {
+        return bookRepository.findAll();
     }
 
     @Override
@@ -18,17 +20,31 @@ public class BookService implements IService {
     }
 
     @Override
-    public void update(int id, Object o) {
-
+    public void update(int id, Book o) {
     }
 
     @Override
-    public Object findById(int id) {
-        return null;
+    public Book findById(int id) {
+        return bookRepository.findById(id);
     }
 
     @Override
-    public List findByName(String name) {
-        return null;
+    public List<Book> findByName(String name) {
+        return bookRepository.findByName(name);
+    }
+
+    @Override
+    public List<Book> findByAuthor(String name) {
+        return bookRepository.findByAuthor(name);
+    }
+
+    @Override
+    public List<Book> findByAuthorFr() {
+        return bookRepository.findByAuthorFr();
+    }
+
+    @Override
+    public void updateBook(Book book) {
+        bookRepository.update(book);
     }
 }

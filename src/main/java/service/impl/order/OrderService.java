@@ -4,7 +4,8 @@ import dao.OrderDAO;
 import dao.OrderDetailDAO; // Thêm DAO nếu cần cho OrderDetail
 import model.Order;
 import model.OrderDetail;
-import repository.DBRepository;
+
+import repository.connection.DBRepository;
 import repository.order.OrderRepository;
 import service.IService;
 
@@ -27,9 +28,9 @@ public class OrderService implements IService<Order> {
         return orderDAO.getAllOrders();
     }
 
-    public List<OrderDetail> findAllOrderDetails() {
-        return orderRepository.findAllOrderDetails();
-    }
+//    public List<OrderDetail> findAllOrderDetails() {
+//        return orderRepository.findAllOrderDetails();
+//    }
 
     @Override
     public void remove(int id) {

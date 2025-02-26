@@ -1,5 +1,7 @@
 package service;
 
+import model.User;
+
 import java.util.List;
 
 public interface IService<T> {
@@ -8,4 +10,5 @@ public interface IService<T> {
     void update(int id, T t);
     T findById(int id);
     List<T> findByName(String name);
+
 }

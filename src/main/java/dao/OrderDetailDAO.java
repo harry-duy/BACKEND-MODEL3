@@ -12,7 +12,6 @@ public class OrderDetailDAO {
         this.conn = conn;
     }
 
-    // Lấy tất cả chi tiết đơn hàng
     public List<OrderDetail> getAllOrderDetails() {
         List<OrderDetail> orderDetails = new ArrayList<>();
         String sql = "SELECT * FROM Order_Details";
@@ -34,7 +33,7 @@ public class OrderDetailDAO {
                         rs.getString("street"),
                         rs.getString("note_order"),
                         rs.getString("payment_method"),
-                        rs.getString("status")
+                        rs.getString("order_status")
                 );
                 orderDetails.add(orderDetail);
             }
