@@ -1,4 +1,5 @@
-<%--
+<%@ page import="model.Book" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: DacHaiPham
   Date: 2/13/2025
@@ -237,7 +238,7 @@
                 <div class="d-flex">
                     <img src="https://via.placeholder.com/50" class="me-3" alt="Sản phẩm">
                     <div>
-                        <p class="mb-1" >Tên sách</p>
+                        <p class="mb-1">Tên sách</p>
                         <strong>0đ</strong>
                     </div>
                 </div>
@@ -245,8 +246,21 @@
                 <p><strong>Trọng lượng:</strong></p>
                 <p><strong>Vận chuyển:</strong> 0đ</p>
                 <h5 class="text-danger">0đ</h5>
+
+                <!-- Hiển thị book.id -->
+                <%
+                    List<Book> cart = (List<Book>) session.getAttribute("cart");
+                    if (cart != null && !cart.isEmpty()) {
+                        for (Book book : cart) {
+                %>
+                <p><strong>Book ID:</strong> <%= book.getId() %></p>
+                <%
+                        }
+                    }
+                %>
             </div>
         </div>
+
 
         <!-- Phương thức thanh toán -->
         <div class="mt-4">
