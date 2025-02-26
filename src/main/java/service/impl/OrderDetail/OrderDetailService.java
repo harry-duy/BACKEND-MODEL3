@@ -1,6 +1,7 @@
 package service.impl.OrderDetail;
 
 import dao.OrderDetailDAO;
+import model.Order;
 import model.OrderDetail;
 import service.IService;
 
@@ -27,6 +28,10 @@ public class OrderDetailService implements IService<OrderDetail> {
     @Override
     public void update(int id, OrderDetail orderDetail) {
         orderDetailDAO.updateOrderDetail(id, orderDetail);
+    }
+
+    @Override
+    public void update(int id, Order o) {
     }
 
     @Override

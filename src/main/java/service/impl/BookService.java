@@ -1,6 +1,7 @@
 package service.impl;
 
 import model.Book;
+import model.Order;
 import repository.book.BookRepository;
 import service.IBookService;
 import service.IService;
@@ -21,6 +22,11 @@ public class BookService implements IService<Book>, IBookService {
 
     @Override
     public void update(int id, Book o) {
+
+    }
+
+    @Override
+    public void update(int id, Order o) {
 
     }
 

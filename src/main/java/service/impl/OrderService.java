@@ -1,5 +1,7 @@
 package service.impl;
 
+import model.Order;
+import repository.order.OrderRepository;
 import service.IService;
 
 import java.util.List;
@@ -22,12 +24,18 @@ public class OrderService implements IService {
     }
 
     @Override
-    public Object findById(int id) {
-        return null;
+    public void update(int id, Order o) {
+
     }
 
     @Override
-    public List findByName(String name) {
+    public Order findById(int id) {
+        return OrderRepository.findById(id); // Gọi phương thức chính xác
+    }
+
+
+    @Override
+    public List<Order> findByName(String name) {
         return List.of();
     }
 }
