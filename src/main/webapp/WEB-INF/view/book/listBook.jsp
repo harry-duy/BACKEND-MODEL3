@@ -10,6 +10,8 @@
     <title>Danh Sách Sản Phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <style>
         .sidebar {
@@ -319,6 +321,187 @@
         .show {
             display: block;
         }
+        /* Hộp chat */
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 320px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ddd;
+        }
+
+        /* Nội dung chat */
+        .chat-body {
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Tin nhắn */
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .user-message, .bot-message {
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background: #f1f1f1;
+            color: black;
+            align-self: flex-start;
+        }
+
+        /* Footer chat */
+        .chat-footer {
+            display: flex;
+            padding: 5px;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            outline: none;
+        }
+
+        .chat-footer button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+        /* Nút mở chat */
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .chat-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Hộp chat */
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 320px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ddd;
+        }
+
+        /* Header chat */
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Nội dung chat */
+        .chat-body {
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Footer chat */
+        .chat-footer {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 5px;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            outline: none;
+        }
+
+        .chat-footer button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+        /* Nút Facebook */
+        .icon-circle {
+            position: fixed;
+            bottom: 80px; /* Điều chỉnh vị trí */
+            right: 20px; /* Điều chỉnh vị trí */
+            background-color: #1877F2; /* Màu xanh Facebook */
+            color: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .icon-circle i {
+            color: white;
+        }
+
+        .icon-circle:hover {
+            transform: scale(1.1);
+            background-color: #166FE5; /* Màu hover đậm hơn */
+        }
+
+
+
+
 
 
 
@@ -448,6 +631,7 @@
         </div>
 
         <!-- Product List -->
+        <!-- Product List -->
         <div class="col-lg-9">
             <div class="row">
                 <c:forEach var="book" items="${books}">
@@ -462,23 +646,142 @@
                                 </c:otherwise>
                             </c:choose>
                             <h5>${book.title}</h5>
-                            <p class="price"><fmt:formatNumber value="${book.price}" type="number" pattern="#,##0.000" />VND</p>
-                            <button class="buy-button">Mua ngay</button>
+                            <p class="price">
+                                <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0.000" />VND
+                            </p>
+
+                            <!-- Form to pass product details using JavaBean -->
+                            <form action="order" method="get">
+                                <input type="hidden" name="imageURL" value="${book.imageURL}" />
+                                <input type="hidden" name="title" value="${book.title}" />
+                                <input type="hidden" name="price" value="${book.price}" />
+                                <button class="buy-button" type="submit">Mua ngay</button>
+                            </form>
                         </div>
                     </div>
                 </c:forEach>
             </div>
         </div>
-    </div>
-</div>
-</div>
+        <a  href="https://www.facebook.com/v.tafii" class="icon-circle">
+            <i class="bi bi-facebook"></i>
+        </a>
+        <!-- Nút mở chat -->
+        <div id="chat-button" class="chat-icon">
+            <i class="bi bi-chat-fill"></i>
+        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+        <!-- Hộp chat -->
+        <div id="chatbox" class="chat-popup">
+            <div class="chat-header">
+                <span>Chatbot Hỗ Trợ Mua Hàng</span>
+                <button id="close-chat" class="close-btn">&times;</button>
+            </div>
+            <div class="chat-body">
+                <div class="messages" id="response"></div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
+                <button id="send-chat">Gửi</button>
+            </div>
+        </div>
+    </div>
 <script>
     function toggleDropdown() {
         var menu = document.querySelector(".dropdown-menu");
         menu.classList.toggle("show");
+    }
+
+
+    document.getElementById("chat-button").addEventListener("click", function () {
+        document.getElementById("chatbox").style.display = "block";
+    });
+
+    document.getElementById("close-chat").addEventListener("click", function () {
+        document.getElementById("chatbox").style.display = "none";
+    });
+
+    document.getElementById("send-chat").addEventListener("click", function () {
+        let input = document.getElementById("chat-input");
+        if (input.value.trim() !== "") {
+            let messages = document.querySelector(".messages");
+            let newMessage = document.createElement("div");
+            newMessage.textContent = input.value;
+            messages.appendChild(newMessage);
+            input.value = "";
+        }
+    });
+        document.getElementById("chat-button").addEventListener("click", function () {
+        document.getElementById("chatbox").style.display = "block";
+    });
+
+        document.getElementById("close-chat").addEventListener("click", function () {
+        document.getElementById("chatbox").style.display = "none";
+    });
+
+        document.getElementById("send-chat").addEventListener("click", sendMessage);
+
+        async function sendMessage() {
+        const inputField = document.getElementById('userInput');
+        const input = inputField.value.trim();
+        const responseDiv = document.getElementById('response');
+
+        if (!input) {
+        return;
+    }
+
+        // Hiển thị tin nhắn người dùng
+        const userMessage = document.createElement('div');
+        userMessage.classList.add('user-message');
+        userMessage.textContent = input;
+        responseDiv.appendChild(userMessage);
+
+        // Xóa nội dung ô nhập sau khi gửi
+        inputField.value = '';
+
+        // Hiển thị trạng thái "Đang trả lời..."
+        const loadingMessage = document.createElement('div');
+        loadingMessage.classList.add('bot-message');
+        loadingMessage.textContent = "Đang trả lời...";
+        responseDiv.appendChild(loadingMessage);
+
+        try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+        "Authorization": "Bearer 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",
+        "HTTP-Referer": "http://localhost:8080/",
+        "X-Title": "HelloServlet",
+        "Content-Type": "application/json"
+    },
+        body: JSON.stringify({
+        "model": "deepseek/deepseek-r1-distill-llama-70b:free",
+        "messages": [{"role": "user", "content": input}],
+    })
+    });
+
+        const data = await response.json();
+        console.log("API Response:", data); // Debug response
+
+        // Xóa tin nhắn "Đang trả lời..."
+        responseDiv.removeChild(loadingMessage);
+
+        // Thêm tin nhắn phản hồi từ chatbot
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('bot-message');
+        botMessage.textContent = data.choices?.[0]?.message?.content || 'Không có phản hồi.';
+        responseDiv.appendChild(botMessage);
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+        responseDiv.removeChild(loadingMessage);
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('bot-message');
+        errorMessage.textContent = 'Lỗi: ' + error.message;
+        responseDiv.appendChild(errorMessage);
+    }
+
+        // Cuộn xuống tin nhắn mới nhất
+        responseDiv.scrollTop = responseDiv.scrollHeight;
     }
 </script>
 </body>

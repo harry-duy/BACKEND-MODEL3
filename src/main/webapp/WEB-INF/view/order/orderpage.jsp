@@ -1,3 +1,4 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="model.Book" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
@@ -6,6 +7,12 @@
   Time: 7:26 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%
+    Book book = new Book();
+    book.setImageURL(request.getParameter("imageURL"));
+    book.setTitle(request.getParameter("title"));
+    book.setPrice(Double.parseDouble(request.getParameter("price")));
+%>
 <!DOCTYPE html>
 <html lang="vi">
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -128,10 +135,54 @@
         .payment:hover {
             color: darkorange; /* Màu cam đậm khi hover */
         }
+        /* Điều chỉnh chiều rộng ảnh */
+        .card img {
+            max-width: 100px; /* Giới hạn chiều rộng ảnh */
+            height: auto;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
 
+        /* Bố cục giỏ hàng */
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 2px solid #ff7f00;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .card-body {
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+
+        .card-body h5 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-body p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff7f00;
+        }
+
+        .card-footer .total-price {
+            font-size: 16px;
+        }
 
     </style>
-
 
 </head>
 <body>
@@ -236,31 +287,18 @@
             <h4>Giỏ hàng</h4>
             <div class="card p-3">
                 <div class="d-flex">
-                    <img src="https://via.placeholder.com/50" class="me-3" alt="Sản phẩm">
-                    <div>
-                        <p class="mb-1">Tên sách</p>
-                        <strong>0đ</strong>
+                    <img src="<%= book.getImageURL() %>" alt="Sản phẩm">
+                    <div class="card-body">
+                        <h5><%= book.getTitle() %></h5>
+                        <p><strong>Trọng lượng:</strong> 300g</p>
+                        <p><strong>Vận chuyển:</strong> 30,000 VNĐ/p>
                     </div>
                 </div>
-                <p><strong>Tổng giá:</strong> 0đ</p>
-                <p><strong>Trọng lượng:</strong></p>
-                <p><strong>Vận chuyển:</strong> 0đ</p>
-                <h5 class="text-danger">0đ</h5>
-
-                <!-- Hiển thị book.id -->
-                <%
-                    List<Book> cart = (List<Book>) session.getAttribute("cart");
-                    if (cart != null && !cart.isEmpty()) {
-                        for (Book book : cart) {
-                %>
-                <p><strong>Book ID:</strong> <%= book.getId() %></p>
-                <%
-                        }
-                    }
-                %>
+                <div class="card-footer">
+                    <p class="total-price">Tổng giá: <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0.000" /> VND</p>
+                </div>
             </div>
         </div>
-
 
         <!-- Phương thức thanh toán -->
         <div class="mt-4">
@@ -297,23 +335,6 @@
 
 <!-- JavaScript -->
 <script>
-    const districts = {
-        hanoi: ["Ba Đình", "Hoàn Kiếm", "Hai Bà Trưng", "Cầu Giấy"],
-        hcm: ["Quận 1", "Quận 3", "Quận 5", "Bình Thạnh"],
-        danang: ["Hải Châu", "Thanh Khê", "Ngũ Hành Sơn", "Cẩm Lệ", "Sơn Trà"],
-        hue: ["Phú Vang", "Hương Trà", "Hương Thủy", "Phong Điền"]
-    };
-
-    const wards = {
-        "Ba Đình": ["Điện Biên", "Kim Mã", "Ngọc Hà", "Trúc Bạch"],
-        "Hoàn Kiếm": ["Hàng Bài", "Hàng Gai", "Hàng Trống", "Phan Chu Trinh"],
-        "Quận 1": ["Bến Nghé", "Bến Thành", "Cầu Kho", "Cô Giang"],
-        "Quận 3": ["Phường 1", "Phường 2", "Phường 3", "Phường 4"],
-        "Hải Châu": ["Bình Hiên", "Bình Thuận", "Hải Châu 1", "Hải Châu 2"],
-        "Thanh Khê": ["Hòa Khê", "Tam Thuận", "Tân Chính", "Vĩnh Trung"],
-        "Phú Vang": ["Phú Đa", "Phú Hồ", "Phú Xuân", "Vinh Hà"]
-    };
-
     function updateDistricts() {
         const city = document.getElementById("city").value;
         const districtSelect = document.getElementById("district");
