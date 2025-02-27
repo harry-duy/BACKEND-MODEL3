@@ -43,6 +43,11 @@ public class UserService implements IService , IUserService {
         return null;
     }
 
+    @Override
+    public void add(Object o) {
+
+    }
+
 
     @Override
     public User login(String userName, String password) {

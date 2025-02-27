@@ -349,23 +349,7 @@
             gap: 10px;
         }
 
-        .user-message, .bot-message {
-            padding: 8px;
-            border-radius: 5px;
-            max-width: 80%;
-        }
 
-        .user-message {
-            background: #007bff;
-            color: white;
-            align-self: flex-end;
-        }
-
-        .bot-message {
-            background: #f1f1f1;
-            color: black;
-            align-self: flex-start;
-        }
 
         /* Footer chat */
         .chat-footer {
@@ -498,13 +482,6 @@
             transform: scale(1.1);
             background-color: #166FE5; /* Màu hover đậm hơn */
         }
-
-
-
-
-
-
-
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
@@ -545,7 +522,7 @@
             <c:if test="${sessionScope.roleId == 1}">
                 <div class="dropdown">
                     <a href="#" class="manage" onclick="toggleDropdown()">
-                        <i class="bi bi-list"></i>
+                        <i class="bi bi-person-lines-fill"></i>
                         <span>Quản lý</span>
                     </a>
                     <div class="dropdown-menu">
@@ -652,6 +629,7 @@
 
                             <!-- Form to pass product details using JavaBean -->
                             <form action="order" method="get">
+                                <input type="hidden" name="bookId" value="${book.id}">
                                 <input type="hidden" name="imageURL" value="${book.imageURL}" />
                                 <input type="hidden" name="title" value="${book.title}" />
                                 <input type="hidden" name="price" value="${book.price}" />
@@ -684,6 +662,7 @@
                 <button id="send-chat">Gửi</button>
             </div>
         </div>
+    </div>
     </div>
 <script>
     function toggleDropdown() {
@@ -748,7 +727,7 @@
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer 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",
         "HTTP-Referer": "http://localhost:8080/",
         "X-Title": "HelloServlet",
         "Content-Type": "application/json"
@@ -784,5 +763,7 @@
         responseDiv.scrollTop = responseDiv.scrollHeight;
     }
 </script>
+
+</div>
 </body>
 </html>

@@ -43,4 +43,9 @@ public class OrderDetailService implements IService<OrderDetail> {
     public List<OrderDetail> findByName(String name) {
         throw new UnsupportedOperationException("findByName không được hỗ trợ cho OrderDetail");
     }
+
+    @Override
+    public void add(OrderDetail orderDetail) {
+        orderDetailDAO.add(orderDetail);
+    }
 }

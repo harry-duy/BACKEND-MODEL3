@@ -143,4 +143,16 @@ public class BookRepository {
             throw new RuntimeException(e);
         }
     }
+    public void delete(int id){
+        String sql = "UPDATE books set status = 0 where id = ?";
+        Connection connection = DBRepository.getConnection();
+        try (PreparedStatement preparedStatement= connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

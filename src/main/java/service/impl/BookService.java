@@ -40,6 +40,11 @@ public class BookService implements IService<Book>, IBookService {
     }
 
     @Override
+    public void add(Book book) {
+
+    }
+
+    @Override
     public List<Book> findByAuthor(String name) {
         return bookRepository.findByAuthor(name);
     }

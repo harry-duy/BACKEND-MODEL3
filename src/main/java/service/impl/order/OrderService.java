@@ -55,4 +55,9 @@ public class OrderService implements IService<Order> {
     public List<Order> findByName(String name) {
         return orderDAO.getOrdersByCustomerName(name);
     }
+
+    @Override
+    public void add(Order order) {
+
+    }
 }

@@ -223,147 +223,101 @@
     </div>
 </header>
 
-    <!-- Nội dung chính -->
+<!-- Nội dung chính -->
 <div class="container mt-4">
     <div class="row">
-
-        <!-- Địa chỉ giao hàng -->
+        <!-- Địa chỉ giao hàng (bên trái) -->
         <div class="col-md-8">
-            <h4>Địa chỉ giao hàng</h4>
-            <form>
+            <form action="orderDetails?action=create" method="post">
+                <h4>Địa chỉ giao hàng</h4>
+
                 <div class="mb-3">
                     <label class="form-label">Họ tên *</label>
-                    <input type="text" class="form-control" required>
+                    <input type="text" class="form-control" name="fullName" required>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Email *</label>
-                        <input type="email" class="form-control" required>
+                        <input type="email" class="form-control" name="email" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Số điện thoại *</label>
-                        <input type="text" class="form-control" required>
+                        <input type="text" class="form-control" name="phoneNumber" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tỉnh/Thành phố *</label>
-                        <select id="city" class="form-select" onchange="updateDistricts()">
-                            <option selected>-- Chọn thành phố --</option>
-                            <option value="hanoi">Hà Nội</option>
-                            <option value="hcm">TP. Hồ Chí Minh</option>
-                            <option value="danang">Đà Nẵng</option>
-                            <option value="hue">Huế</option>
-                        </select>
+                        <input type="text" class="form-control" name="provinceCity" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Quận/Huyện *</label>
-                        <select id="district" class="form-select" onchange="updateWards()">
-                            <option selected>-- Chọn quận huyện --</option>
-                        </select>
+                        <input type="text" class="form-control" name="district" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Phường/Xã/Thị trấn *</label>
-                        <select id="ward" class="form-select">
-                            <option selected>-- Chọn phường/xã/thị trấn --</option>
-                        </select>
+                        <input type="text" class="form-control" name="ward" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Số nhà, Tên đường</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="street">
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Ghi chú</label>
-                    <textarea class="form-control" rows="3"></textarea>
+                    <textarea class="form-control" name="noteOrder" rows="3"></textarea>
                 </div>
-            </form>
-        </div>
+                <div class="col-md-4">
+                    <h4>Giỏ hàng</h4>
+                    <div class="card p-3">
+                        <div class="d-flex">
+                            <img src="<%= book.getImageURL() %>" alt="Sản phẩm" class="card-img-top">
+                            <div class="card-body">
+                                <h5><%= book.getTitle() %></h5>
+                                <p><strong>Trọng lượng:</strong> 300g</p>
+                                <p><strong>Vận chuyển:</strong> 30,000 VNĐ</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <p class="total-price">Tổng giá:
+                                <fmt:formatNumber value="${book.price + 30.000}" type="number" pattern="#,##0.000" /> VND
+                            </p>
+                        </div>
 
-        <!-- Giỏ hàng -->
-        <div class="col-md-4">
-            <h4>Giỏ hàng</h4>
-            <div class="card p-3">
-                <div class="d-flex">
-                    <img src="<%= book.getImageURL() %>" alt="Sản phẩm">
-                    <div class="card-body">
-                        <h5><%= book.getTitle() %></h5>
-                        <p><strong>Trọng lượng:</strong> 300g</p>
-                        <p><strong>Vận chuyển:</strong> 30,000 VNĐ/p>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <p class="total-price">Tổng giá: <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0.000" /> VND</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Phương thức thanh toán -->
-        <div class="mt-4">
-            <h4>Vận chuyển</h4>
-            <hr>
-            <h5>Hình thức thanh toán</h5>
-            <form>
+                <input type="hidden" name="bookId" value="${book.id}">
+
+                <h4>Phương thức thanh toán</h4>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="cod" checked>
-                    <label class="form-check-label" for="cod">
-                        Thanh toán khi nhận hàng
-                    </label>
+                    <input class="form-check-input" type="radio" name="paymentMethod" value="COD" id="cod" checked>
+                    <label class="form-check-label" for="cod">Thanh toán khi nhận hàng</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="bankTransfer">
-                    <label class="form-check-label" for="bankTransfer">
-                        Chuyển khoản qua ATM/Internet Banking
-                    </label>
+                    <input class="form-check-input" type="radio" name="paymentMethod" value="BankTransfer" id="bankTransfer">
+                    <label class="form-check-label" for="bankTransfer">Chuyển khoản qua ATM/Internet Banking</label>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-center gap-4">
+                    <button type="button" class="btn btn-secondary">Quay lại</button>
+                    <button type="submit" class="btn btn-danger">Thanh toán</button>
                 </div>
             </form>
-        </div>
-
-        <!-- Nút điều hướng -->
-        <div class="mt-4 d-flex justify-content-center gap-4">
-            <button type="button" class="btn btn-secondary">Quay lại</button>
-            <button type="submit" class="btn btn-danger">Thanh toán</button>
-        </div>
+    </div>
     </div>
 </div>
+
+
 
 <footer class="bg-light text-center py-3 mt-4">
     <p class="mb-0">© 2024 Cửa hàng của bạn. All Rights Reserved.</p>
 </footer>
 
 <!-- JavaScript -->
-<script>
-    function updateDistricts() {
-        const city = document.getElementById("city").value;
-        const districtSelect = document.getElementById("district");
-        districtSelect.innerHTML = "<option selected>-- Chọn quận huyện --</option>";
 
-        if (districts[city]) {
-            districts[city].forEach(district => {
-                let option = new Option(district, district);
-                districtSelect.add(option);
-            });
-        }
-
-        // Reset phường/xã
-        updateWards();
-    }
-
-    function updateWards() {
-        const district = document.getElementById("district").value;
-        const wardSelect = document.getElementById("ward");
-        wardSelect.innerHTML = "<option selected>-- Chọn phường/xã/thị trấn --</option>";
-
-        if (wards[district]) {
-            wards[district].forEach(ward => {
-                let option = new Option(ward, ward);
-                wardSelect.add(option);
-            });
-        }
-    }
-</script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

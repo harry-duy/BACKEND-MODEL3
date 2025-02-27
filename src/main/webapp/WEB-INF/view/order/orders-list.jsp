@@ -52,13 +52,13 @@
       <thead class="table-dark">
       <tr>
         <th>ID</th>
-        <th>Order ID</th>
         <th>Book ID</th>
-        <th>Số lượng</th>
         <th>Khách Hàng</th>
+        <th>Email</th>
         <th>Số Điện Thoại</th>
         <th>Địa Chỉ</th>
         <th>Ghi chú</th>
+        <th>Giá</th>
         <th>Phương Thức Thanh Toán</th>
         <th>Trạng Thái</th>
         <th>Hành Động</th>
@@ -68,15 +68,15 @@
       <c:forEach var="orderDetail" items="${orderDetails}">
         <tr>
           <td>${orderDetail.id}</td>
-          <td>${orderDetail.orderId}</td>
           <td>${orderDetail.bookId}</td>
-          <td>${orderDetail.quantity}</td>
           <td>${orderDetail.fullName}</td>
+          <td>${orderDetail.email}</td>
           <td>${orderDetail.phoneNumber}</td>
           <td>
               ${orderDetail.street}, ${orderDetail.ward}, ${orderDetail.district}, ${orderDetail.provinceCity}
           </td>
           <td>${orderDetail.noteOrder}</td>
+          <td>${orderDetail.price}</td>
           <td>${orderDetail.paymentMethod}</td>
           <td>
             <span class="${orderDetail.status eq 'Đang xử lý' ? 'status-processing'
@@ -95,7 +95,7 @@
               Sửa
             </button>
 
-            <a href="ordersList?action=delete&id=${orderDetail.id}" class="btn btn-danger btn-sm"
+            <a href="orderDetails?action=delete&id=${orderDetail.id}" class="btn btn-danger btn-sm"
                onclick="return confirm('Bạn có chắc chắn muốn xóa chi tiết đơn hàng này?')">
               Xóa
             </a>
@@ -115,7 +115,7 @@
         <h5 class="modal-title" id="editOrderLabel">Chỉnh Sửa Chi Tiết Đơn Hàng</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="ordersList" method="post">
+      <form action="orderDetails?action=update" method="post">
       <input type="hidden" name="id" id="orderId">
       <div class="mb-3">
         <label class="form-label">Tên Khách Hàng</label>

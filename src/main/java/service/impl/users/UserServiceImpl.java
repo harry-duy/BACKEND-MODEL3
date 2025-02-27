@@ -122,4 +122,9 @@ public class UserServiceImpl implements IService<User> {
         }
         return users;
     }
+
+    @Override
+    public void add(User user) {
+
+    }
 }
