@@ -62,12 +62,14 @@ public class LoginController extends HttpServlet {
             response.sendRedirect("login");
         }
     }
-    private void addUser (HttpServletRequest request, HttpServletResponse response)throws IOException{
+    private void addUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userName = request.getParameter("username");
         String email = request.getParameter("email");
-        String password= request.getParameter("password");
-        User user = new User(userName,password,email);
+        String password = request.getParameter("password");
+        User user = new User(userName, password, email);
         userService.add(user);
-        response.sendRedirect("login");
+
+        response.sendRedirect("login?success=1");
     }
+
 }

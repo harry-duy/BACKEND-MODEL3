@@ -279,6 +279,16 @@
     passwordField.type = passwordField.type === "password" ? "text" : "password";
     icon.classList.toggle("bi-eye-slash");
   }
+  document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("success") === "1") {
+      alert("Đăng ký thành công! Vui lòng đăng nhập.");
+      history.replaceState(null, null, window.location.pathname); // Xóa tham số 'success' khỏi URL
+    } else if (urlParams.get("error") === "exists") {
+      alert("Email đã tồn tại! Vui lòng sử dụng email khác.");
+      history.replaceState(null, null, window.location.pathname);
+    }
+  });
 </script>
 
 </body>
