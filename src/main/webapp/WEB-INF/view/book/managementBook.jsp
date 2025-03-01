@@ -275,7 +275,11 @@
 
 <div class="container mt-4">
     <h2 class="text-center mb-4">Danh sách sản phẩm</h2>
-
+    <div class="d-flex justify-content-end mb-3">
+        <a href="managementBook?action=addForm" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Thêm sản phẩm
+        </a>
+    </div>
     <table class="table table-bordered table-hover align-middle text-center">
         <thead class="table-primary">
         <tr>
@@ -304,7 +308,7 @@
                 <td>
                     <div class="d-flex justify-content-center gap-2">
                         <a href="managementBook?action=editForm&id=${book.id}" class="btn btn-warning btn-sm">Sửa</a>
-                        <a href="deleteBook?id=${book.id}" class="btn btn-danger btn-sm"
+                        <a href="managementBook?action=deleteBook&id=${book.id}" class="btn btn-danger btn-sm"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa sách này không?');">Xóa</a>
                     </div>
                 </td>

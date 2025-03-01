@@ -14,18 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
-    private static final String GET_USER_BY_USERNAME_PASSWORD =
-            "SELECT * FROM users WHERE username = ? AND password = ?";
-    private static final String INSERT_USER_SQL = "INSERT INTO user (username, password, email, roleId) VALUES (?, ?, ?, ?)";
-
+    private static final String INSERT_USER_SQL = "";
     public void saveUser(User user) {
-        try (Connection connection = DBRepository.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
+        Connection connection = DBRepository.getConnection();
+        try (
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
             preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword()); // Lưu ý: Cần mã hóa mật khẩu
+            preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setInt(4, user.getRoleId());
-
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,6 +76,7 @@ public class UserRepository {
         }
         return null;
     }
+
 
 }
 

@@ -11,7 +11,7 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Chỉnh sửa sách</h2>
 
-  <form action="/managementBook" method="post" class="row g-3">
+  <form action="managementBook?action=edit" method="post" class="row g-3">
     <input type="hidden" name="action" value="edit">
     <input type="hidden" name="id" value="${book.id}">
 

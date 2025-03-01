@@ -2,7 +2,6 @@ package service.impl;
 
 import model.Order;
 import model.User;
-import org.mindrot.jbcrypt.BCrypt;
 import repository.user.UserRepository;
 import service.IService;
 import service.IUserService;
@@ -15,7 +14,7 @@ public class UserService implements IService , IUserService {
 
     @Override
     public List<User> getAll() {
-        return userRepository.getAllUsers(); // ✅ Gọi phương thức thông qua đối tượng
+        return userRepository.getAllUsers();
     }
 
     @Override
@@ -45,7 +44,11 @@ public class UserService implements IService , IUserService {
 
     @Override
     public void add(Object o) {
+    }
 
+    @Override
+    public void add(User user) {
+        userRepository.saveUser(user);
     }
 
 

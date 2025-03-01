@@ -25,6 +25,20 @@ public class LoginController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
+        switch (action) {
+            case "login" :
+                handleLogin(request, response);
+                break;
+            case "register":
+                addUser(request,response);
+                break;
+        }
+    }
+    private void handleLogin (HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -33,7 +47,6 @@ public class LoginController extends HttpServlet {
 
         User user = userService.login(username, password);
         System.out.println("Kết quả trả về từ UserService: " + (user != null ? "Đăng nhập thành công" : "Sai mật khẩu hoặc tài khoản"));
-
 
         if (user != null) {
             HttpSession session = request.getSession();
@@ -45,8 +58,16 @@ public class LoginController extends HttpServlet {
             } else {
                 response.sendRedirect("listBook");
             }
-        }else {
+        } else {
             response.sendRedirect("login");
         }
+    }
+    private void addUser (HttpServletRequest request, HttpServletResponse response)throws IOException{
+        String userName = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password= request.getParameter("password");
+        User user = new User(userName,password,email);
+        userService.add(user);
+        response.sendRedirect("login");
     }
 }

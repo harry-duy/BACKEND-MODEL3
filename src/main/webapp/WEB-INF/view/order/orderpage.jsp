@@ -1,6 +1,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="model.Book" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="model.User" %><%--
   Created by IntelliJ IDEA.
   User: DacHaiPham
   Date: 2/13/2025
@@ -437,33 +438,41 @@
 
         <!-- Các nút bên phải -->
         <div class="header-right">
-            <c:if test="${empty sessionScope.user}">
-                <a href="/login" class="header-account">
-                    <i class="bi bi-person-fill"></i>
-                    <span>Tài khoản</span>
-                </a>
-            </c:if>
 
-            <c:if test="${not empty sessionScope.user}">
+            <%
+                User user = (User) session.getAttribute("user");
+            %>
+            <div>
+                <% if (user != null) { %>
                 <a href="/logout" class="header-account">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Đăng xuất</span>
                 </a>
-            </c:if>
+                <% } else { %>
+                <a href="/login" class="header-account">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Tài khoản</span>
+                </a>
+                <% } %>
+            </div>
 
-            <c:if test="${sessionScope.roleId == 1}">
-                <div class="dropdown">
-                    <a href="#" class="manage" onclick="toggleDropdown()">
-                        <i class="bi bi-person-lines-fill"></i>
-                        <span>Quản lý</span>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="/users">Quản lý người dùng</a>
-                        <a href="/managementBook">Quản lý sách</a>
-                        <a href="/orderDetails">Quản lý đơn hàng</a>
-                    </div>
+
+
+            <% Integer roleId = (Integer) session.getAttribute("roleId"); %>
+            <% if (roleId != null && roleId == 1) { %>
+            <div class="dropdown">
+                <a href="#" class="manage" onclick="toggleDropdown()">
+                    <i class="bi bi-person-lines-fill"></i>
+                    <span>Quản lý</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/users">Quản lý người dùng</a>
+                    <a href="/managementBook">Quản lý sách</a>
+                    <a href="/orderDetails">Quản lý đơn hàng</a>
                 </div>
-            </c:if>
+            </div>
+            <% } %>
+
 
 
             <a href="/orderpage" class="payment">
@@ -476,12 +485,11 @@
 
 <!-- Nội dung chính -->
 <div class="container mt-4">
+    <form action="orderDetails?action=create" method="post" onsubmit="return confirmOrder()">
     <div class="row">
-        <!-- Địa chỉ giao hàng (bên trái) -->
-        <div class="col-md-8">
-            <form action="orderDetails?action=create" method="post">
+            <!-- Địa chỉ giao hàng (bên trái) -->
+            <div class="col-md-8">
                 <h4>Địa chỉ giao hàng</h4>
-
                 <div class="mb-3">
                     <label class="form-label">Họ tên *</label>
                     <input type="text" class="form-control" name="fullName" required>
@@ -520,49 +528,52 @@
                     <label class="form-label">Ghi chú</label>
                     <textarea class="form-control" name="noteOrder" rows="3"></textarea>
                 </div>
-                <div class="col-md-4">
-                    <h4>Giỏ hàng</h4>
-                    <div class="card p-3">
-                        <div class="d-flex">
-                            <img src="<%= book.getImageURL() %>" alt="Sản phẩm" class="card-img-top">
-                            <div class="card-body">
-                                <h5><%= book.getTitle() %></h5>
-                                <p><strong>Trọng lượng:</strong> 300g</p>
-                                <p><strong>Vận chuyển:</strong> 30,000 VNĐ</p>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <p class="total-price">Tổng giá:
-                                <fmt:formatNumber value="${book.price + 30.000}" type="number" pattern="#,##0.000" /> VND
-                            </p>
-                        </div>
+            </div>
 
+            <!-- Giỏ hàng (bên phải) -->
+            <div class="col-md-4">
+                <h4>Giỏ hàng</h4>
+                <div class="card p-3">
+                    <div class="d-flex">
+                        <img src="<%= book.getImageURL() %>" alt="Sản phẩm" class="card-img-top">
+                        <div class="card-body">
+                            <h5><%= book.getTitle() %></h5>
+                            <p><strong>Giá sách: </strong>
+                                <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0.000"/> VNĐ
+                            </p>
+
+                            <p><strong>Trọng lượng:</strong> 300g</p>
+                            <p><strong>Vận chuyển:</strong> 30,000 VNĐ</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <p class="total-price">Tổng giá:
+                            <fmt:formatNumber value="${book.price + 30.000}" type="number" pattern="#,##0.000" /> VND
+                        </p>
                     </div>
                 </div>
-
                 <input type="hidden" name="bookId" value="${book.id}">
 
+                <!-- Phương thức thanh toán -->
                 <h4>Phương thức thanh toán</h4>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" value="COD" id="cod" checked>
+                    <input class="form-check-input" type="radio" name="paymentMethod" value="Thanh toán khi nhận hàng" id="cod" checked>
                     <label class="form-check-label" for="cod">Thanh toán khi nhận hàng</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" value="BankTransfer" id="bankTransfer">
+                    <input class="form-check-input" type="radio" name="paymentMethod" value="Chuyển khoản qua ATM/Internet Banking" id="bankTransfer">
                     <label class="form-check-label" for="bankTransfer">Chuyển khoản qua ATM/Internet Banking</label>
                 </div>
+            </div>
+        </div>
 
-                <div class="mt-4 d-flex justify-content-center gap-4">
-                    <button type="button" class="btn btn-secondary">Quay lại</button>
-                    <button type="submit" class="btn btn-danger">Thanh toán</button>
-                </div>
-            </form>
-    </div>
-    </div>
+        <!-- Nút thao tác -->
+        <div class="mt-4 d-flex justify-content-center gap-4">
+            <button type="button" class="btn btn-secondary">Quay lại</button>
+            <button type="submit" class="btn btn-danger">Thanh toán</button>
+        </div>
+    </form>
 </div>
-
-
-
 <footer class="bg-light text-center py-3 mt-4">
     <p class="mb-0">© 2024 Cửa hàng của bạn. All Rights Reserved.</p>
 </footer>
@@ -572,6 +583,11 @@
         var menu = document.querySelector(".dropdown-menu");
         menu.classList.toggle("show");
     }
+    function confirmOrder() {
+        alert("Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
+        return true; // Cho phép form tiếp tục submit
+    }
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

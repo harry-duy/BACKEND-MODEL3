@@ -17,6 +17,7 @@ public class BookService implements IService<Book>, IBookService {
 
     @Override
     public void remove(int id) {
+        bookRepository.delete(id);
 
     }
 
@@ -41,6 +42,7 @@ public class BookService implements IService<Book>, IBookService {
 
     @Override
     public void add(Book book) {
+        bookRepository.add(book);
 
     }
 
@@ -57,5 +59,10 @@ public class BookService implements IService<Book>, IBookService {
     @Override
     public void updateBook(Book book) {
         bookRepository.update(book);
+    }
+
+    @Override
+    public List<Book> findByPrice(double minPrice, double maxPrice) {
+        return bookRepository.findByPrice( minPrice, maxPrice);
     }
 }

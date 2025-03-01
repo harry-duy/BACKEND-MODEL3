@@ -9,7 +9,7 @@ public class User {
 
     public User() {}
 
-    // Constructor đầy đủ
+
     public User(int id, String username, String password, String email, int roleId) {
         this.id = id;
         this.username = username;
@@ -18,12 +18,18 @@ public class User {
         this.roleId = roleId;
     }
 
-    // Constructor KHÔNG có password (để dùng trong getAll())
+
     public User(int id, String username, String email, int roleId) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.roleId = roleId;
+    }
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     public int getId() {

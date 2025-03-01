@@ -102,7 +102,6 @@ public class OrderDetailDAO {
     public void add(OrderDetail orderDetail) {
         String sql = "INSERT INTO order_details(book_id,full_name,email,phone_number,province_city,district,ward,street,note_order, total_price,payment_method) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
         try (Connection connection = new DBRepository().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1,orderDetail.getBookId());

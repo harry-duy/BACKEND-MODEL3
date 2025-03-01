@@ -9,6 +9,14 @@ public class Book {
     private String imageURL;
     private String bookDescription;
     private int status;
+    public Book(String title, String author, double price, String imageURL, int stockQuantity, String bookDescription) {
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.imageURL = imageURL;
+        this.bookDescription = bookDescription;
+    }
 
     public int getStatus() {
         return status;

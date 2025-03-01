@@ -337,9 +337,8 @@
         /* Nội dung chat */
         .chat-body {
             padding: 10px;
-            height: 250px;
+            height: 300px; /* Tăng chiều cao */
             overflow-y: auto;
-            border-bottom: 1px solid #ddd;
         }
 
         /* Tin nhắn */
@@ -482,6 +481,42 @@
             transform: scale(1.1);
             background-color: #166FE5; /* Màu hover đậm hơn */
         }
+        /* Điều chỉnh chiều cao hộp chat */
+        .chat-body {
+            padding: 10px;
+            height: 300px; /* Tăng chiều cao */
+            overflow-y: auto;
+        }
+
+        /* Tin nhắn từ người dùng (bên phải) */
+        .user-message {
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 75%;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        /* Tin nhắn từ chatbot (bên trái) */
+        .bot-message {
+            background: #f1f1f1;
+            color: black;
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 75%;
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        /* Bố cục tin nhắn */
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
@@ -599,11 +634,12 @@
 
                 <h4>GIÁ</h4>
                 <ul class="list-unstyled">
-                    <li><input type="radio" name="price"> 0đ -50,000đ</li>
-                    <li><input type="radio" name="price"> 50,000đ - 100,000đ</li>
-                    <li><input type="radio" name="price"> 100,000đ - 150,000đ</li>
-                    <li><input type="radio" name="price"> 150,000đ - 300,000đ</li>
+                    <li><a href="/book?type=findByPrice&minPrice=0&maxPrice=50.000">0đ - 50,000đ</a></li>
+                    <li><a href="/book?type=findByPrice&minPrice=50.000&maxPrice=100.000">50,000đ - 100,000đ</a></li>
+                    <li><a href="/book?type=findByPrice&minPrice=100.000&maxPrice=150.000">100,000đ - 150,000đ</a></li>
+                    <li><a href="/book?type=findByPrice&minPrice=150.000&maxPrice=300.000">150,000đ - 300,000đ</a></li>
                 </ul>
+
             </div>
         </div>
 
@@ -697,18 +733,20 @@
         document.getElementById("chatbox").style.display = "none";
     });
 
-        document.getElementById("send-chat").addEventListener("click", sendMessage);
+    document.getElementById("send-chat").addEventListener("click", function () {
+        sendMessage();
+    });
 
-        async function sendMessage() {
+    async function sendMessage() {
         const inputField = document.getElementById('userInput');
         const input = inputField.value.trim();
         const responseDiv = document.getElementById('response');
 
         if (!input) {
-        return;
-    }
+            return;
+        }
 
-        // Hiển thị tin nhắn người dùng
+        // Hiển thị tin nhắn người dùng (bên phải)
         const userMessage = document.createElement('div');
         userMessage.classList.add('user-message');
         userMessage.textContent = input;
@@ -724,44 +762,45 @@
         responseDiv.appendChild(loadingMessage);
 
         try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-        "Authorization": "Bearer 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",
-        "HTTP-Referer": "http://localhost:8080/",
-        "X-Title": "HelloServlet",
-        "Content-Type": "application/json"
-    },
-        body: JSON.stringify({
-        "model": "deepseek/deepseek-r1-distill-llama-70b:free",
-        "messages": [{"role": "user", "content": input}],
-    })
-    });
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer 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",
+                    "HTTP-Referer": "http://localhost:8080/",
+                    "X-Title": "HelloServlet",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "model": "deepseek/deepseek-r1-distill-llama-70b:free",
+                    "messages": [{"role": "user", "content": input}]
+                })
+            });
 
-        const data = await response.json();
-        console.log("API Response:", data); // Debug response
+            const data = await response.json();
+            console.log("API Response:", data); // Debug response
 
-        // Xóa tin nhắn "Đang trả lời..."
-        responseDiv.removeChild(loadingMessage);
+            // Xóa tin nhắn "Đang trả lời..."
+            responseDiv.removeChild(loadingMessage);
 
-        // Thêm tin nhắn phản hồi từ chatbot
-        const botMessage = document.createElement('div');
-        botMessage.classList.add('bot-message');
-        botMessage.textContent = data.choices?.[0]?.message?.content || 'Không có phản hồi.';
-        responseDiv.appendChild(botMessage);
+            // Thêm tin nhắn phản hồi từ chatbot (bên trái)
+            const botMessage = document.createElement('div');
+            botMessage.classList.add('bot-message');
+            botMessage.textContent = data.choices?.[0]?.message?.content || 'Không có phản hồi.';
+            responseDiv.appendChild(botMessage);
 
-    } catch (error) {
-        console.error("Fetch error:", error);
-        responseDiv.removeChild(loadingMessage);
-        const errorMessage = document.createElement('div');
-        errorMessage.classList.add('bot-message');
-        errorMessage.textContent = 'Lỗi: ' + error.message;
-        responseDiv.appendChild(errorMessage);
-    }
+        } catch (error) {
+            console.error("Fetch error:", error);
+            responseDiv.removeChild(loadingMessage);
+            const errorMessage = document.createElement('div');
+            errorMessage.classList.add('bot-message');
+            errorMessage.textContent = 'Lỗi: ' + error.message;
+            responseDiv.appendChild(errorMessage);
+        }
 
         // Cuộn xuống tin nhắn mới nhất
         responseDiv.scrollTop = responseDiv.scrollHeight;
     }
+
 </script>
 
 </div>

@@ -1,6 +1,7 @@
 package repository.book;
 
 import model.Book;
+import model.User;
 import repository.connection.DBRepository;
 
 
@@ -18,7 +19,7 @@ public class BookRepository {
         try {
             Statement statement = DBRepository.getConnection().
                     createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * from books");
+            ResultSet resultSet = statement.executeQuery("SELECT * from books where status = 1");
             while (resultSet.next()){
                 int idBook =resultSet.getInt("id");
                 String title = resultSet.getString("title");
@@ -144,13 +145,51 @@ public class BookRepository {
         }
     }
     public void delete(int id){
-        String sql = "UPDATE books set status = 0 where id = ?";
-        Connection connection = DBRepository.getConnection();
-        try (PreparedStatement preparedStatement= connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1,id);
+        Connection conn = DBRepository.getConnection();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(
+                "UPDATE books SET status = 0 WHERE id = ?"
+        )){
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static List<Book> findByPrice(double minPrice, double maxPrice) {
+        List<Book> books = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM books WHERE price BETWEEN ? AND ?";
+            PreparedStatement preparedStatement = DBRepository.getConnection().prepareStatement(query);
+            preparedStatement.setDouble(1, minPrice);
+            preparedStatement.setDouble(2, maxPrice);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
+            while (resultSet.next()) {
+                int idBook = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                Double price = resultSet.getDouble("price");
+                String imageURL = resultSet.getString("ImageURL");
+                int quantity = resultSet.getInt("stock_quantity");
+                String description = resultSet.getString("book_description");
+                books.add(new Book(idBook, title, author, price, imageURL, quantity, description));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return books;
+    }
+    public void add(Book book) {
+         // tao ket noi
+        Connection conn = DBRepository.getConnection();
+        try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO books (title,author,price,ImageURL,stock_quantity,book_description) values(?,?,?,?,?,?)")){
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthor());
+            preparedStatement.setDouble(3, book.getPrice());
+            preparedStatement.setString(4, book.getImageURL());
+            preparedStatement.setInt(5, book.getStockQuantity());
+            preparedStatement.setString(6, book.getBookDescription());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

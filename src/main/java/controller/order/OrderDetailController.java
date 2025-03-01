@@ -6,6 +6,7 @@ import repository.connection.DBRepository;
 import service.impl.OrderDetail.OrderDetailService;
 
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -116,7 +117,7 @@ public class OrderDetailController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dữ liệu không hợp lệ");
         }
     }
-    private void insertOrderDetails(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void insertOrderDetails(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int bookId = Integer.parseInt(request.getParameter("bookId"));
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
@@ -136,14 +137,15 @@ public class OrderDetailController extends HttpServlet {
                 totalPrice = Double.parseDouble(totalPriceStr);
             } catch (NumberFormatException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid totalPrice format");
-                return; // Dừng phương thức nếu lỗi
+                return;
             }
         }
 
         OrderDetail orderDetail = new OrderDetail(bookId, fullName, email, phoneNumber, provinceCity, district, ward, street, noteOrder, totalPrice, paymentMethod);
         orderDetailService.add(orderDetail);
 
-        response.sendRedirect("orderDetails?action=list");
+        request.getRequestDispatcher("/WEB-INF/view/order/orderpage.jsp").forward(request, response);
+
     }
 
 
