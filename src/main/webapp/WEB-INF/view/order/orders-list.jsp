@@ -356,13 +356,10 @@
             </span>
           </td>
           <td>
-            <button class="btn btn-warning btn-sm editBtn"
-                    data-id="${orderDetail.id}"
-                    data-name="${orderDetail.fullName}"
-                    data-phone="${orderDetail.phoneNumber}"
-                    data-address="${orderDetail.street}, ${orderDetail.ward}, ${orderDetail.district}, ${orderDetail.provinceCity}"
-                    data-status="${orderDetail.status}">
-              Sửa
+            <button class="btn btn-warning btn-sm editBtn">
+                <a href="orderDetails?action=edit&id=${orderDetail.id}" class="btn btn-warning btn-sm">
+                  Sửa
+                </a>
             </button>
 
             <a href="orderDetails?action=delete&id=${orderDetail.id}" class="btn btn-danger btn-sm"
@@ -377,93 +374,13 @@
   </div>
 </div>
 
-<!-- Modal Chỉnh Sửa Đơn Hàng -->
-<div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editOrderLabel">Chỉnh Sửa Chi Tiết Đơn Hàng</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="orderDetails?action=update" method="post">
-      <input type="hidden" name="id" id="orderId">
-      <div class="mb-3">
-        <label class="form-label">Tên Khách Hàng</label>
-        <input type="text" name="fullName" id="orderName" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Số Điện Thoại</label>
-        <input type="text" name="phoneNumber" id="orderPhone" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Địa Chỉ</label>
-        <input type="text" name="address" id="orderAddress" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Trạng Thái</label>
-        <select name="status" id="orderStatus" class="form-select">
-          <option value="Đang xử lý">Đang xử lý</option>
-          <option value="Đã giao">Đã giao</option>
-          <option value="Đã hủy">Đã hủy</option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Cập Nhật</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-      </div>
-    </form>
 
-    </div>
-  </div>
-</div>
-
+</body>
 <script>
-  document.querySelectorAll('.editBtn').forEach(button => {
-    button.addEventListener('click', function() {
-      document.getElementById('orderId').value = this.dataset.id;
-      document.getElementById('orderName').value = this.dataset.name;
-      document.getElementById('orderPhone').value = this.dataset.phone;
-      document.getElementById('orderAddress').value = this.dataset.address;
-      document.getElementById('orderStatus').value = this.dataset.status;
-
-      new bootstrap.Modal(document.getElementById('editOrderModal')).show();
-    });
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const statusFilter = document.getElementById("statusFilter");
-    const rows = document.querySelectorAll("#orderTable tr");
-
-    function filterTable() {
-      let searchValue = searchInput.value.toLowerCase();
-      let selectedStatus = statusFilter.value.toLowerCase();
-
-      rows.forEach(row => {
-        let customerName = row.cells[4].textContent.toLowerCase(); // Tên khách hàng
-        let statusText = row.cells[9].textContent.toLowerCase(); // Trạng thái đơn hàng
-
-        let matchesSearch = customerName.includes(searchValue);
-        let matchesStatus = selectedStatus === "" || statusText.includes(selectedStatus);
-
-        row.style.display = matchesSearch && matchesStatus ? "" : "none";
-      });
-    }
-
-    // Bắt sự kiện khi nhập vào ô tìm kiếm
-    searchInput.addEventListener("keyup", filterTable);
-
-    // Bắt sự kiện khi chọn trạng thái
-    statusFilter.addEventListener("change", filterTable);
-  });
-    function toggleDropdown() {
+  function toggleDropdown() {
     var menu = document.querySelector(".dropdown-menu");
     menu.classList.toggle("show");
   }
 
 </script>
-
-
-</body>
 </html>

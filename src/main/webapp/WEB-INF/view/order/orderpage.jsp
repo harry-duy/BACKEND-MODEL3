@@ -527,6 +527,7 @@
                 <div class="mb-3">
                     <label class="form-label">Ghi chú</label>
                     <textarea class="form-control" name="noteOrder" rows="3"></textarea>
+
                 </div>
             </div>
 
@@ -540,18 +541,21 @@
                             <h5><%= book.getTitle() %></h5>
                             <p><strong>Giá sách: </strong>
                                 <fmt:formatNumber value="${book.price}" type="number" pattern="#,##0.000"/> VNĐ
-                            </p>
 
+                            </p>
+                            <input type="hidden" name="total_price" value="${book.price + 30.000}">VND
                             <p><strong>Trọng lượng:</strong> 300g</p>
                             <p><strong>Vận chuyển:</strong> 30,000 VNĐ</p>
                         </div>
                     </div>
                     <div class="card-footer">
                         <p class="total-price">Tổng giá:
-                            <fmt:formatNumber value="${book.price + 30.000}" type="number" pattern="#,##0.000" /> VND
+                            <fmt:formatNumber value="${book.price + 30.000}" type="number" pattern="#,##0.000" />
+
                         </p>
                     </div>
                 </div>
+
                 <input type="hidden" name="bookId" value="${book.id}">
 
                 <!-- Phương thức thanh toán -->

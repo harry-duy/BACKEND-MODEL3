@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(urlPatterns ="/login")
 public class LoginController extends HttpServlet {
@@ -38,7 +39,7 @@ public class LoginController extends HttpServlet {
                 break;
         }
     }
-    private void handleLogin (HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -49,19 +50,24 @@ public class LoginController extends HttpServlet {
         System.out.println("Kết quả trả về từ UserService: " + (user != null ? "Đăng nhập thành công" : "Sai mật khẩu hoặc tài khoản"));
 
         if (user != null) {
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("roleId", user.getRoleId());
 
+            // Nếu là admin, luôn lấy danh sách user mới từ DB
             if (user.getRoleId() == 1) {
-                response.sendRedirect("listBook");
-            } else {
-                response.sendRedirect("listBook");
+                List<User> users = userService.getAll();
+                System.out.println("Số lượng users sau khi đăng nhập: " + users.size()); // Debug log
+                session.setAttribute("users", users);
             }
+
+            response.sendRedirect("/book"); // Chuyển hướng tới danh sách sách
         } else {
-            response.sendRedirect("login");
+            response.sendRedirect("login?error=1");
         }
     }
+
+
     private void addUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userName = request.getParameter("username");
         String email = request.getParameter("email");

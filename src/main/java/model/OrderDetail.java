@@ -7,6 +7,52 @@ public class OrderDetail {
     private int quantity;
     private String fullName;
     private String email;
+    private String phoneNumber;
+    private String provinceCity;
+    private String district;
+    private String ward;
+    private String street;
+    private String noteOrder;
+    private double price;
+
+    public OrderDetail(int id, String fullName, String email,  String phoneNumber,String provinceCity, String district, String ward, String street, String noteOrder, double price, String paymentMethod, String status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.provinceCity = provinceCity;
+        this.phoneNumber = phoneNumber;
+        this.district = district;
+        this.ward = ward;
+        this.street = street;
+        this.noteOrder = noteOrder;
+        this.price = price;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+    }
+
+
+    public OrderDetail(int id, int bookId, int quantity, String fullName, String email, String phoneNumber, String provinceCity, String district, String ward, String street, String noteOrder, double price, String paymentMethod, String status) {
+        this.id = id;
+        this.bookId = bookId;
+        this.quantity = quantity;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.provinceCity = provinceCity;
+        this.district = district;
+        this.ward = ward;
+        this.street = street;
+        this.noteOrder = noteOrder;
+        this.price = price;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+    }
+
+    private String paymentMethod;
+    private String status;
+
+
+
 
     public OrderDetail(int bookId, String fullName, String email, String phoneNumber, String provinceCity, String ward, String district, String street, String noteOrder, Double price, String paymentMethod) {
         this.bookId = bookId;
@@ -22,13 +68,8 @@ public class OrderDetail {
         this.paymentMethod = paymentMethod;
     }
 
-    private String phoneNumber;
-    private String provinceCity;
-    private String district;
-    private String ward;
-    private String street;
-    private String noteOrder;
-    private double price;
+
+
 
     public String getEmail() {
         return email;
@@ -62,35 +103,14 @@ public class OrderDetail {
         this.status = status;
     }
 
-    private String paymentMethod;
-    private String status; // Thêm trạng thái
 
-    // Constructor đầy đủ
-    public OrderDetail(int id, int orderId, int bookId, int quantity,
-                       String fullName, String phoneNumber, String provinceCity,
-                       String district, String ward, String street,
-                       String noteOrder, String paymentMethod, String status) {
-        this.id = id;
-        this.orderId = orderId;
-        this.bookId = bookId;
-        this.quantity = quantity;
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.provinceCity = provinceCity;
-        this.district = district;
-        this.ward = ward;
-        this.street = street;
-        this.noteOrder = noteOrder;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-    }
 
     public String getAddress() {
         return street + ", " + ward + ", " + district + ", " + provinceCity;
     }
 
 
-    // Getters và Setters
+
     public int getId() {
         return id;
     }

@@ -28,9 +28,10 @@ public class UserService implements IService , IUserService {
     }
 
     @Override
-    public void update(int id, Order o) {
+    public void update(Object o) {
 
     }
+
 
     @Override
     public Object findById(int id) {

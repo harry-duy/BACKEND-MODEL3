@@ -1,7 +1,7 @@
 package service.impl.OrderDetail;
 
 import dao.OrderDetailDAO;
-import model.Order;
+
 import model.OrderDetail;
 import service.IService;
 
@@ -27,13 +27,12 @@ public class OrderDetailService implements IService<OrderDetail> {
 
     @Override
     public void update(int id, OrderDetail orderDetail) {
-        orderDetailDAO.updateOrderDetail(id, orderDetail);
+        orderDetailDAO.updateOrderDetail(orderDetail);
     }
-
     @Override
-    public void update(int id, Order o) {
+    public void update(OrderDetail orderDetail) {
+         orderDetailDAO.updateOrderDetail(orderDetail);
     }
-
     @Override
     public OrderDetail findById(int id) {
         return orderDetailDAO.getOrderDetailById(id);
@@ -41,7 +40,7 @@ public class OrderDetailService implements IService<OrderDetail> {
 
     @Override
     public List<OrderDetail> findByName(String name) {
-        throw new UnsupportedOperationException("findByName không được hỗ trợ cho OrderDetail");
+        return null;
     }
 
     @Override

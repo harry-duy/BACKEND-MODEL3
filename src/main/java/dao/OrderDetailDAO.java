@@ -45,28 +45,31 @@ public class OrderDetailDAO {
         return orderDetails;
     }
 
-    // Tìm chi tiết đơn hàng theo ID
     public OrderDetail getOrderDetailById(int id) {
-        String sql = "SELECT * FROM Order_Details WHERE id = ?";
+        conn = DBRepository.getConnection();
+        // Thay thế bằng phương thức mở kết nối của bạn
+        String sql = "SELECT * FROM order_details WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+            stmt.setString(1, String.valueOf(id));
 
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Executing SQL: " + stmt.toString());
             if (rs.next()) {
                 return new OrderDetail(
                         rs.getInt("id"),
-                        rs.getInt("order_id"),
                         rs.getInt("book_id"),
                         rs.getInt("quantity"),
                         rs.getString("full_name"),
+                        rs.getString("email"),
                         rs.getString("phone_number"),
                         rs.getString("province_city"),
                         rs.getString("district"),
                         rs.getString("ward"),
                         rs.getString("street"),
                         rs.getString("note_order"),
+                        rs.getDouble("total_price"),
                         rs.getString("payment_method"),
-                        rs.getString("status")
+                        rs.getString("order_status")
                 );
             }
         } catch (SQLException e) {
@@ -75,24 +78,11 @@ public class OrderDetailDAO {
         return null;
     }
 
-    // Cập nhật chi tiết đơn hàng
-    public void updateOrderDetail(int id, OrderDetail orderDetail) {
-        String sql = "UPDATE Order_Details SET quantity=?, note_order=?, status=? WHERE id=?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, orderDetail.getQuantity());
-            stmt.setString(2, orderDetail.getNoteOrder());
-            stmt.setString(3, orderDetail.getStatus());
-            stmt.setInt(4, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Xóa chi tiết đơn hàng
     public void deleteOrderDetail(int id) {
         String sql = "DELETE FROM Order_Details WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection connection = new DBRepository().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -100,7 +90,7 @@ public class OrderDetailDAO {
         }
     }
     public void add(OrderDetail orderDetail) {
-        String sql = "INSERT INTO order_details(book_id,full_name,email,phone_number,province_city,district,ward,street,note_order, total_price,payment_method) " +
+        String sql = "INSERT INTO order_details(book_id,full_name,email,phone_number,province_city,district,ward,street,note_order,total_price ,payment_method) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = new DBRepository().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -112,8 +102,8 @@ public class OrderDetailDAO {
             preparedStatement.setString(6, orderDetail.getDistrict());
             preparedStatement.setString(7, orderDetail.getWard());
             preparedStatement.setString(8, orderDetail.getStreet());
-            preparedStatement.setString(9, orderDetail.getNoteOrder());
             preparedStatement.setDouble(10, orderDetail.getPrice());
+            preparedStatement.setString(9, orderDetail.getNoteOrder());
             preparedStatement.setString(11, orderDetail.getPaymentMethod());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -121,4 +111,25 @@ public class OrderDetailDAO {
         }
     }
 
+    public void updateOrderDetail(OrderDetail orderDetail) {
+        String sql = "UPDATE order_details SET full_name = ?, email = ?, phone_number = ?, province_city = ?, district = ?, ward = ?, street = ?, note_order = ?, total_price = ?, payment_method = ?, order_status = ? WHERE id = ?";
+        try (Connection connection = new DBRepository().getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, orderDetail.getFullName());
+            stmt.setString(2, orderDetail.getEmail());
+            stmt.setString(3, orderDetail.getPhoneNumber());
+            stmt.setString(4, orderDetail.getProvinceCity());
+            stmt.setString(5, orderDetail.getDistrict());
+            stmt.setString(6, orderDetail.getWard());
+            stmt.setString(7, orderDetail.getStreet());
+            stmt.setString(8, orderDetail.getNoteOrder());
+            stmt.setDouble(9, orderDetail.getPrice());
+            stmt.setString(10, orderDetail.getPaymentMethod());
+            stmt.setString(11, orderDetail.getStatus());
+            stmt.setInt(12, orderDetail.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

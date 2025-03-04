@@ -12,9 +12,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class UserRepository {
-    private static final String INSERT_USER_SQL = "";
+    private static final Logger LOGGER = Logger.getLogger(UserRepository.class.getName());
+
+    private static final String INSERT_USER_SQL =
+            "INSERT INTO users (username, password, email, role_id, status) VALUES (?, ?, ?, ?, 1)";
+
+    private static final String GET_USER_BY_USERNAME_PASSWORD =
+            "SELECT * FROM users WHERE username = ? AND status = 1"; // Chỉ lấy user chưa bị xóa
+
+    private static final String GET_ALL_USERS =
+            "SELECT id, username, email, role_id FROM users WHERE status = 1"; // Chỉ lấy user chưa bị xóa
+
+    private static final String UPDATE_USER_STATUS =
+            "UPDATE users SET status = ? WHERE id = ?";
     public void saveUser(User user) {
         Connection connection = DBRepository.getConnection();
         try (
@@ -30,10 +45,9 @@ public class UserRepository {
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT id, username, email, role_id FROM users"; // Không lấy password
 
         try (Connection conn = DBRepository.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
+             PreparedStatement stmt = conn.prepareStatement(GET_ALL_USERS);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -42,15 +56,16 @@ public class UserRepository {
                         rs.getString("username"),
                         null, // Không trả về mật khẩu
                         rs.getString("email"),
-                        rs.getInt("role_id")
+                        rs.getInt("role_id"),
+                        1 // Mặc định status = 1 vì chỉ lấy user chưa bị xóa
                 ));
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi lấy danh sách user: ", e);
         }
         return users;
     }
+
     public User login(String username, String password) {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
 

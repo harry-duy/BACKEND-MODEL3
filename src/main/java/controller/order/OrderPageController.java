@@ -30,11 +30,7 @@ public class OrderPageController extends HttpServlet {
             book.setImageURL(imageURL);
             book.setTitle(title);
             book.setPrice(Double.parseDouble(price));
-
-            // Gửi đối tượng Book vào request
             request.setAttribute("book", book);
-
-            // Chuyển hướng đến trang orderpage.jsp
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/order/orderpage.jsp");
             dispatcher.forward(request, response);
 
