@@ -1,11 +1,13 @@
 package controller.order;
 
 import dao.OrderDetailDAO;
+import model.Book;
 import model.OrderDetail;
 import repository.connection.DBRepository;
 import service.impl.OrderDetail.OrderDetailService;
 
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ import java.util.List;
 @WebServlet("/orderDetails")
 public class OrderDetailController extends HttpServlet {
     private OrderDetailService orderDetailService;
+
 
     @Override
     public void init() throws ServletException {
@@ -43,6 +46,9 @@ public class OrderDetailController extends HttpServlet {
             switch (action) {
                 case "delete":
                     deleteOrderDetail(request, response);
+                    break;
+                case "edit":
+                    editForm(request, response);
                     break;
                 default:
                     listOrderDetails(request, response);
@@ -74,6 +80,15 @@ public class OrderDetailController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ: " + idParam);
         }
     }
+    private void editForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id")); // Lấy ID từ request
+        OrderDetail orderDetail = orderDetailService.findById(id); // Truy vấn dữ liệu từ DB
+        System.out.println("Editing OrderDetail with ID: " + request.getParameter("id"));
+        request.setAttribute("orderDetail", orderDetail);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/order/edit_orderDetails.jsp");
+        dispatcher.forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -97,26 +112,26 @@ public class OrderDetailController extends HttpServlet {
 
     private void updateOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        try {
-            int id = Integer.parseInt(request.getParameter("id"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            String noteOrder = request.getParameter("noteOrder");
-            String status = request.getParameter("status");
-
-            OrderDetail existingOrderDetail = orderDetailService.findById(id);
-            if (existingOrderDetail != null) {
-                existingOrderDetail.setQuantity(quantity);
-                existingOrderDetail.setNoteOrder(noteOrder);
-                existingOrderDetail.setStatus(status);
-                orderDetailService.update(id, existingOrderDetail);
-            }
-
-            response.sendRedirect("orderDetails?action=list");
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dữ liệu không hợp lệ");
-        }
+        int id = Integer.parseInt(request.getParameter("id"));
+        String fullName = request.getParameter("full_name");
+        String email = request.getParameter("email");
+        String phoneNumber = request.getParameter("phone_number");
+        String provinceCity = request.getParameter("province_city");
+        String district = request.getParameter("district");
+        String ward = request.getParameter("ward");
+        String street = request.getParameter("street");
+        String noteOrder = request.getParameter("note_order");
+        Double totalPrice = Double.parseDouble(request.getParameter("total_price"));
+        String paymentMethod = request.getParameter("payment_method");
+        String orderStatus = request.getParameter("order_status");
+        OrderDetail orderDetail = new OrderDetail(id, fullName, email, phoneNumber, provinceCity, district, ward, street, noteOrder, totalPrice, paymentMethod, orderStatus);
+        orderDetailService.update(orderDetail);
+        response.sendRedirect("orderDetails?action=list");
     }
-    private void insertOrderDetails(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+
+
+    private void insertOrderDetails(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int bookId = Integer.parseInt(request.getParameter("bookId"));
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
@@ -126,27 +141,12 @@ public class OrderDetailController extends HttpServlet {
         String ward = request.getParameter("ward");
         String street = request.getParameter("street");
         String noteOrder = request.getParameter("noteOrder");
+        double totalPrice = Double.parseDouble(request.getParameter("total_price"));
         String paymentMethod = request.getParameter("paymentMethod");
-
-        String totalPriceStr = request.getParameter("totalPrice");
-        double totalPrice = 0.0; // Giá trị mặc định
-
-        if (totalPriceStr != null && !totalPriceStr.trim().isEmpty()) {
-            try {
-                totalPrice = Double.parseDouble(totalPriceStr);
-            } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid totalPrice format");
-                return; // Dừng phương thức nếu lỗi
-            }
-        }
-
         OrderDetail orderDetail = new OrderDetail(bookId, fullName, email, phoneNumber, provinceCity, district, ward, street, noteOrder, totalPrice, paymentMethod);
         orderDetailService.add(orderDetail);
-
-        response.sendRedirect("orderDetails?action=list");
+        request.getRequestDispatcher("/WEB-INF/view/order/orderpage.jsp").forward(request, response);
     }
-
-
 }
 
 

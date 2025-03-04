@@ -6,7 +6,6 @@ import model.Order;
 import model.OrderDetail;
 
 import repository.connection.DBRepository;
-import repository.order.OrderRepository;
 import service.IService;
 
 import java.sql.Connection;
@@ -15,7 +14,6 @@ import java.util.List;
 public class OrderService implements IService<Order> {
     private OrderDAO orderDAO;
     private OrderDetailDAO orderDetailDAO; // Thêm DAO cho OrderDetail nếu cần
-    private OrderRepository orderRepository;
 
     public OrderService() {
         Connection conn = DBRepository.getConnection();
@@ -42,9 +40,11 @@ public class OrderService implements IService<Order> {
         orderDAO.updateOrder(id, order);
     }
 
-    public void updateOrderDetail(int id, OrderDetail orderDetail) { // Nếu cần cập nhật OrderDetail
-        orderDetailDAO.updateOrderDetail(id, orderDetail);
+    @Override
+    public void update(Order order) {
+
     }
+
 
     @Override
     public Order findById(int id) {

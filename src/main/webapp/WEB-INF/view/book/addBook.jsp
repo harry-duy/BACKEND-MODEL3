@@ -1,11 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Chỉnh sửa sách</title>
+  <title>Thêm Sách</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
@@ -31,61 +30,48 @@
     .btn-custom:hover {
       background-color: #e67300;
     }
-    .img-thumbnail {
-      display: block;
-      margin: auto;
-      max-width: 150px;
-      max-height: 200px;
-      border-radius: 5px;
-    }
   </style>
 </head>
 <body>
 
 <div class="container mt-5">
   <div class="form-container">
-    <h2>Chỉnh sửa sách</h2>
-    <form action="managementBook?action=edit" method="post">
-      <input type="hidden" name="action" value="edit">
-      <input type="hidden" name="id" value="${book.id}">
+    <h2>Thêm Sách Mới</h2>
+    <form action="managementBook?action=add" method="post">
 
       <div class="mb-3">
         <label class="form-label">Tên sách:</label>
-        <input type="text" class="form-control" name="title" value="${book.title}" required>
+        <input type="text" class="form-control" name="title" required>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Tác giả:</label>
-        <input type="text" class="form-control" name="author" value="${book.author}" required>
+        <input type="text" class="form-control" name="author" required>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Giá (VNĐ):</label>
-        <input type="number" step="0.01" class="form-control" name="price" value="${book.price}" required>
+        <input type="number" step="0.01" class="form-control" name="price" required>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Số lượng:</label>
-        <input type="number" class="form-control" name="stock_quantity" value="${book.stockQuantity}" required>
+        <input type="number" class="form-control" name="stockQuantity" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mô tả:</label>
+        <textarea class="form-control" name="bookDescription" rows="3"></textarea>
       </div>
 
       <div class="mb-3">
         <label class="form-label">URL Hình ảnh:</label>
-        <input type="text" class="form-control" name="ImageURL" value="${book.imageURL}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Mô tả sách:</label>
-        <textarea class="form-control" name="book_description" rows="3">${book.bookDescription}</textarea>
-      </div>
-
-      <div class="text-center mb-3">
-        <img src="${book.imageURL}" alt="Book Image" class="img-thumbnail">
+        <input type="text" class="form-control" name="imageURL" required>
       </div>
 
       <div class="d-flex justify-content-between">
-        <a href="/managementBook" class="btn btn-secondary">Hủy</a>
-        <button type="submit" class="btn btn-custom">Lưu thay đổi</button>
+        <a href="managementBook" class="btn btn-secondary">Quay lại</a>
+        <button type="submit" class="btn btn-custom">Thêm Sách</button>
       </div>
 
     </form>

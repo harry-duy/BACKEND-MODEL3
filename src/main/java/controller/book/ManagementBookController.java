@@ -30,7 +30,11 @@ public class ManagementBookController extends HttpServlet {
             case "editForm" :
                 editForm(req, resp);
                 break;
-            case "delete":
+            case "deleteBook":
+                deleteBook(req,resp);
+                break;
+            case "addForm" :
+                showCreateForm(req,resp);
                 break;
             default:
                 listBook(req, resp);
@@ -52,7 +56,14 @@ public class ManagementBookController extends HttpServlet {
             response.sendRedirect("/managementBook?error=notfound");
         }
     }
-
+    private void showCreateForm(HttpServletRequest request,HttpServletResponse response)throws ServletException,IOException{
+        request.getRequestDispatcher("WEB-INF/view/book/addBook.jsp").forward(request,response);
+    }
+    private void deleteBook(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        bookService.remove(id);
+        resp.sendRedirect("/managementBook");
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -65,6 +76,9 @@ public class ManagementBookController extends HttpServlet {
         switch (action){
             case "edit":
                 updateBook(req, resp);
+                break;
+            case "add":
+                addBook(req, resp);
                 break;
         }
     }
@@ -79,5 +93,16 @@ public class ManagementBookController extends HttpServlet {
         Book book = new Book(id,title ,author, price,image, stock,description);
         bookService.updateBook(book);
         resp.sendRedirect("/managementBook");
+    }
+    private void addBook(HttpServletRequest request,HttpServletResponse response)throws IOException{
+        String title = request.getParameter("title");
+        String author = request.getParameter("author");
+        double price = Double.parseDouble(request.getParameter("price"));
+        String imageURL = request.getParameter("imageURL");
+        int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
+        String bookDescription = request.getParameter("bookDescription");
+        Book book = new Book(title,author,price ,imageURL,stockQuantity,bookDescription);
+        bookService.add(book);
+        response.sendRedirect("/managementBook");
     }
 }

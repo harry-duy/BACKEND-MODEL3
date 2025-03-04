@@ -9,9 +9,7 @@ public interface IService<T> {
     List<T> getAll();
     void remove(int id);
     void update(int id, T t);
-
-    void update(int id, Order o);
-
+    void update(T t);
     T findById(int id);
     List<T> findByName(String name);
     void add(T t);

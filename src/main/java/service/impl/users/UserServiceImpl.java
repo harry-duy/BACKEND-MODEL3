@@ -21,7 +21,7 @@ public class UserServiceImpl implements IService<User> {
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT id, username, email, role_id FROM Users";
+        String sql = "SELECT id, username, email, role_id FROM Users where status = 1";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -40,6 +40,30 @@ public class UserServiceImpl implements IService<User> {
         }
         return users;
     }
+    public List<User> getAllDelete() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT id, username, email, role_id FROM Users where status = 0";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        "",  // Không lấy password để bảo mật
+                        rs.getString("email"),
+                        rs.getInt("role_id")
+                );
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+
+
 
     // Xóa người dùng theo ID
     @Override
@@ -71,8 +95,7 @@ public class UserServiceImpl implements IService<User> {
     }
 
     @Override
-    public void update(int id, Order o) {
-
+    public void update(User user) {
     }
 
     // Tìm người dùng theo ID
