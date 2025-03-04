@@ -350,7 +350,7 @@
           <td>${orderDetail.paymentMethod}</td>
           <td>
             <span class="${orderDetail.status eq 'Đang xử lý' ? 'status-processing'
-                          : (orderDetail.status eq 'Đã giao' ? 'status-delivered'
+                          : (orderDetail.status eq 'Đã xử lý ' ? 'status-delivered'
                           : 'status-cancelled')}">
                 ${orderDetail.status}
             </span>
@@ -381,6 +381,5 @@
     var menu = document.querySelector(".dropdown-menu");
     menu.classList.toggle("show");
   }
-
 </script>
 </html>

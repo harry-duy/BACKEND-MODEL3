@@ -765,13 +765,13 @@
             const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer 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",
+                    "Authorization": "Bearer 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",
                     "HTTP-Referer": "http://localhost:8080/",
                     "X-Title": "HelloServlet",
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    "model": "deepseek/deepseek-r1-distill-llama-70b:free",
+                    "model": "deepseek/deepseek-r1:free",
                     "messages": [{"role": "user", "content": input}]
                 })
             });

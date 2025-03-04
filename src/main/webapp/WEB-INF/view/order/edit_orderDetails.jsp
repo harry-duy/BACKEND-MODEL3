@@ -94,8 +94,12 @@
 
             <div class="mb-3">
                 <label class="form-label">Trạng thái đơn hàng:</label>
-                <input type="text" class="form-control" name="order_status" value="${orderDetail.status}" required>
+                <select class="form-control" name="order_status" required>
+                    <option value="Đang xử lý" ${orderDetail.status == 'Đang xử lý' ? 'selected' : ''}>Đang xử lý</option>
+                    <option value="Đã xử lý" ${orderDetail.status == 'Đã xử lý' ? 'selected' : ''}>Đã xử lý</option>
+                </select>
             </div>
+
 
             <div class="d-flex justify-content-between">
                 <a href="orderDetails?action=list" class="btn btn-secondary">Quay lại</a>

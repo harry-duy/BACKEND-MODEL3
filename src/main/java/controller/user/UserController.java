@@ -27,13 +27,23 @@ public class UserController extends HttpServlet {
             return;
         }
 
-        // Luôn lấy danh sách users từ database
-        List<User> users = userService.getAll();
-        System.out.println("Số lượng users khi vào /users: " + users.size()); // Debug log
-        request.setAttribute("users", users);
+        // Lấy từ khóa tìm kiếm từ request
+        String searchQuery = request.getParameter("search");
 
+        List<User> users;
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            users = userService.findByName(searchQuery.trim());
+        } else {
+            users = userService.getAll();
+        }
+
+        System.out.println("Số lượng users sau khi tìm kiếm: " + users.size()); // Debug log
+
+        request.setAttribute("users", users);
+        request.setAttribute("searchQuery", searchQuery); // Trả lại giá trị search để giữ trong ô input
         request.getRequestDispatcher("WEB-INF/view/user/list-users.jsp").forward(request, response);
     }
+
 
 
 

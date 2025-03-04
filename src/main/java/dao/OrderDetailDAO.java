@@ -113,7 +113,7 @@ public class OrderDetailDAO {
 
     public void updateOrderDetail(OrderDetail orderDetail) {
         String sql = "UPDATE order_details SET full_name = ?, email = ?, phone_number = ?, province_city = ?, district = ?, ward = ?, street = ?, note_order = ?, total_price = ?, payment_method = ?, order_status = ? WHERE id = ?";
-        try (Connection connection = new DBRepository().getConnection();
+        try (Connection conn = new DBRepository().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, orderDetail.getFullName());
             stmt.setString(2, orderDetail.getEmail());

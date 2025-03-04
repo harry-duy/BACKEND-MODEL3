@@ -45,7 +45,6 @@ public class UserRepository {
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-
         try (Connection conn = DBRepository.getConnection();
              PreparedStatement stmt = conn.prepareStatement(GET_ALL_USERS);
              ResultSet rs = stmt.executeQuery()) {

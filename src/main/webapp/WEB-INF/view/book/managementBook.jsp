@@ -252,7 +252,7 @@
             <c:if test="${sessionScope.roleId == 1}">
                 <div class="dropdown">
                     <a href="#" class="manage" onclick="toggleDropdown()">
-                        <i class="bi bi-list"></i>
+                        <i class="bi bi-person-lines-fill"></i>
                         <span>Quản lý</span>
                     </a>
                     <div class="dropdown-menu">
