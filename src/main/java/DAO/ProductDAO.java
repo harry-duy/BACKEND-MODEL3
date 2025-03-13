@@ -4,46 +4,31 @@ import Model.Product;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Connection;
-
-
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class ProductDAO {
-    ProductDAO dao = new ProductDAO();
-    Connection conn = dao.getConnection();
-
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/FinalTest";
     private static final String jdbcUsername = "root";
     private static final String jdbcPassword = "159357bapD";
-    private static Connection connection;
 
     private static final String SELECT_ALL_PRODUCTS = "SELECT p.*, c.name as category_name FROM Product p JOIN Category c ON p.category_id = c.id WHERE p.status = 1";
     private static final String INSERT_PRODUCT = "INSERT INTO Product (name, price, quantity, color, description, category_id, status) VALUES (?, ?, ?, ?, ?, ?, 1)";
     private static final String UPDATE_PRODUCT = "UPDATE Product SET name = ?, price = ?, quantity = ?, color = ?, description = ?, category_id = ? WHERE id = ?";
     private static final String DELETE_PRODUCT = "UPDATE Product SET status = 0 WHERE id = ?";
-    private static final String SEARCH_PRODUCTS = "SELECT p.*, c.name as category_name FROM Product p JOIN Category c ON p.category_id = c.id WHERE p.status = 1 AND (p.name LIKE ? OR p.price LIKE ? OR c.name LIKE ?)";
 
+    public ProductDAO() {}
 
-    public ProductDAO() {} // Private constructor to prevent instantiation
-
-    public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver"); // Load MySQL Driver
-                connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-            }
+    private Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Database driver not found", e);
         }
-        return connection;
+        return DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
     }
-
 
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        try (Connection connection = ProductDAO.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PRODUCTS);
              ResultSet rs = preparedStatement.executeQuery()) {
 
@@ -66,22 +51,6 @@ public class ProductDAO {
         return products;
     }
 
-    public void addProduct(Product product) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCT)) {
-
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setInt(3, product.getQuantity());
-            preparedStatement.setString(4, product.getColor());
-            preparedStatement.setString(5, product.getDescription());
-            preparedStatement.setInt(6, product.getCategoryId());
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void updateProduct(Product product) {
         try (Connection connection = getConnection();
@@ -106,42 +75,93 @@ public class ProductDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCT)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+            System.out.println("Sản phẩm có ID " + id + " đã được ẩn (status = 0).");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Product> searchProducts(String keyword) {
-        List<Product> products = new ArrayList<>();
+    public List<Product> getFilteredProducts(String name, Double price, String category, String color) {
+        List<Product> productList = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT p.*, c.name as category_name FROM Product p JOIN Category c ON p.category_id = c.id WHERE p.status = 1");
+
+        List<Object> params = new ArrayList<>();
+
+        if (name != null && !name.isEmpty()) {
+            sql.append(" AND p.name LIKE ?");
+            params.add("%" + name + "%");
+        }
+        if (price != null) {
+            sql.append(" AND p.price <= ?");
+            params.add(price);
+        }
+        if (category != null && !category.isEmpty()) {
+            sql.append(" AND p.category_id = ?");
+            params.add(Integer.parseInt(category));
+        }
+        if (color != null && !color.isEmpty()) {
+            sql.append(" AND p.color LIKE ?");
+            params.add("%" + color + "%");
+        }
+
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SEARCH_PRODUCTS)) {
+             PreparedStatement ps = connection.prepareStatement(sql.toString())) {
 
-            String searchKeyword = "%" + keyword + "%";
-            preparedStatement.setString(1, searchKeyword);
-            preparedStatement.setString(2, searchKeyword);
-            preparedStatement.setString(3, searchKeyword);
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
 
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while (rs.next()) {
-                int status = rs.getInt("status");
-
-                products.add(new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getInt("quantity"),
-                        rs.getString("color"),
-                        rs.getString("description"),
-                        rs.getInt("category_id"),
-                        rs.getString("category_name"),
-                        status // Truyền vào int thay vì boolean
-                ));
-
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    productList.add(new Product(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getDouble("price"),
+                            rs.getInt("quantity"),
+                            rs.getString("color"),
+                            rs.getString("description"),
+                            rs.getInt("category_id"),
+                            rs.getString("category_name"),
+                            rs.getInt("status")
+                    ));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return products;
+        return productList;
     }
+
+
+    public int addProduct(Product product) {
+        int generatedId = -1;
+        String sql = "INSERT INTO Product (name, price, quantity, color, description, category_id, status) VALUES (?, ?, ?, ?, ?, ?, 1)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setDouble(2, product.getPrice());
+            preparedStatement.setInt(3, product.getQuantity());
+            preparedStatement.setString(4, product.getColor());
+            preparedStatement.setString(5, product.getDescription());
+            preparedStatement.setInt(6, product.getCategoryId());
+
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return generatedId;
+    }
+
+
+
 }

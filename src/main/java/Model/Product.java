@@ -10,9 +10,10 @@ public class Product {
     private int categoryId;
     private int supplierId;
     private String categoryName;
-    private int status; // ✅ Định nghĩa kiểu boolean
-    // Constructor đầy đủ
-    public Product(int id, String name, double price, int quantity, String color, String description, int categoryId, String categoryName, int status) {
+    private int status;
+
+    // ✅ Constructor đầy đủ
+    public Product(int id, String name, double price, int quantity, String color, String description, int categoryId, String categoryName, int supplierId, int status) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -21,17 +22,20 @@ public class Product {
         this.description = description;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.status = status; // Giữ nguyên kiểu int
+        this.supplierId = supplierId;
+        this.status = status;
     }
 
-    // Constructor không tham số
+    // ✅ Constructor không có supplierId
+    public Product(int id, String name, double price, int quantity, String color, String description, int categoryId, String categoryName, int status) {
+        this(id, name, price, quantity, color, description, categoryId, categoryName, 0, status);
+    }
+
+    // ✅ Constructor không tham số
     public Product() {
     }
 
-
-
-
-    // Getter & Setter
+    // ✅ Getter & Setter
     public int getId() {
         return id;
     }
@@ -104,7 +108,6 @@ public class Product {
         this.status = status;
     }
 
-
     public String getCategoryName() {
         return categoryName;
     }
@@ -123,6 +126,7 @@ public class Product {
                 ", color='" + color + '\'' +
                 ", description='" + description + '\'' +
                 ", categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
                 ", supplierId=" + supplierId +
                 ", status=" + status +
                 '}';
