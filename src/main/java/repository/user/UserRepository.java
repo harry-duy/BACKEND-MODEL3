@@ -1,20 +1,13 @@
 package repository.user;
 
-
-import model.Role;
 import model.User;
 import repository.connection.DBRepository;
 
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class UserRepository {
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class.getName());
@@ -23,23 +16,35 @@ public class UserRepository {
             "INSERT INTO users (username, password, email, role_id, status) VALUES (?, ?, ?, ?, 1)";
 
     private static final String GET_USER_BY_USERNAME_PASSWORD =
-            "SELECT * FROM users WHERE username = ? AND status = 1"; // Chỉ lấy user chưa bị xóa
+            "SELECT * FROM users WHERE username = ? AND password = ? AND status = 1";
 
     private static final String GET_ALL_USERS =
-            "SELECT id, username, email, role_id FROM users WHERE status = 1"; // Chỉ lấy user chưa bị xóa
+            "SELECT id, username, email, role_id FROM users WHERE status = 1";
 
     private static final String UPDATE_USER_STATUS =
             "UPDATE users SET status = ? WHERE id = ?";
+
+    private static final String GET_USER_BY_ID =
+            "SELECT * FROM users WHERE id = ?";
+
+    private static final String FIND_USERS_BY_NAME =
+            "SELECT * FROM users WHERE username LIKE ? AND status = 1";
+
+    private static final String UPDATE_USER =
+            "UPDATE users SET username = ?, email = ?, role_id = ? WHERE id = ?";
+
+    // ================= EXISTING METHODS =================
+
     public void saveUser(User user) {
-        Connection connection = DBRepository.getConnection();
-        try (
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
+        try (Connection connection = DBRepository.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setInt(4, user.getRoleId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi khi lưu user: ", e);
         }
     }
 
@@ -53,10 +58,10 @@ public class UserRepository {
                 users.add(new User(
                         rs.getInt("id"),
                         rs.getString("username"),
-                        null, // Không trả về mật khẩu
+                        null,
                         rs.getString("email"),
                         rs.getInt("role_id"),
-                        1 // Mặc định status = 1 vì chỉ lấy user chưa bị xóa
+                        1
                 ));
             }
         } catch (SQLException e) {
@@ -66,32 +71,91 @@ public class UserRepository {
     }
 
     public User login(String username, String password) {
-        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-
         try (Connection connection = DBRepository.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_USERNAME_PASSWORD)) {
 
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet rs = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            if (rs.next()) {
                 return new User(
-                        resultSet.getInt("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("password"),
-                        resultSet.getString("email"),
-                        resultSet.getInt("role_id")
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getInt("role_id"),
+                        rs.getInt("status")
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi khi đăng nhập: ", e);
         }
         return null;
     }
 
+    // ================= NEW METHODS =================
 
+    public User findById(int id) {
+        try (Connection connection = DBRepository.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)) {
+
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getInt("role_id"),
+                        rs.getInt("status")
+                );
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi tìm user theo ID: ", e);
+        }
+        return null;
+    }
+
+    public List<User> findByName(String name) {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = DBRepository.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_USERS_BY_NAME)) {
+
+            statement.setString(1, "%" + name + "%");
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                users.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        null,
+                        rs.getString("email"),
+                        rs.getInt("role_id"),
+                        rs.getInt("status")
+                ));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi tìm user theo tên: ", e);
+        }
+        return users;
+    }
+
+    public void updateUser(int id, User user) {
+        try (Connection connection = DBRepository.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER)) {
+
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getEmail());
+            statement.setInt(3, user.getRoleId());
+            statement.setInt(4, id);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi cập nhật user: ", e);
+        }
+    }
 }
-
-

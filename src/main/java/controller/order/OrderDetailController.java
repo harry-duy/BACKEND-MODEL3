@@ -1,11 +1,8 @@
 package controller.order;
 
-import dao.OrderDetailDAO;
-import model.Book;
 import model.OrderDetail;
 import repository.connection.DBRepository;
 import service.impl.OrderDetail.OrderDetailService;
-
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,16 +18,14 @@ import java.util.List;
 public class OrderDetailController extends HttpServlet {
     private OrderDetailService orderDetailService;
 
-
     @Override
     public void init() throws ServletException {
         try {
-            Connection conn = DBRepository.getConnection(); // Lấy kết nối từ DatabaseConnection
-            this.orderDetailService = new OrderDetailService(conn); // Truyền Connection vào Service
+            Connection conn = DBRepository.getConnection();
+            this.orderDetailService = new OrderDetailService(conn);
         } catch (Exception e) {
             throw new ServletException("Lỗi khởi tạo OrderDetailService", e);
         }
-
     }
 
     @Override
@@ -50,6 +45,9 @@ public class OrderDetailController extends HttpServlet {
                 case "edit":
                     editForm(request, response);
                     break;
+                case "list":
+                    listOrderDetails(request, response);
+                    break;
                 default:
                     listOrderDetails(request, response);
                     break;
@@ -59,9 +57,20 @@ public class OrderDetailController extends HttpServlet {
 
     private void listOrderDetails(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<OrderDetail> orderDetails = orderDetailService.getAll();
-        request.setAttribute("orderDetails", orderDetails);
-        request.getRequestDispatcher("WEB-INF/view/order/orders-list.jsp").forward(request, response);
+        try {
+            List<OrderDetail> orderDetails = orderDetailService.getAll();
+            request.setAttribute("orderDetails", orderDetails);
+
+            // Debug info
+            System.out.println("Number of orders fetched: " + orderDetails.size());
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/order/orders-list.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            System.err.println("Error in listOrderDetails: " + e.getMessage());
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving order details");
+        }
     }
 
     private void deleteOrderDetail(HttpServletRequest request, HttpServletResponse response)
@@ -80,11 +89,12 @@ public class OrderDetailController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ: " + idParam);
         }
     }
+
     private void editForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id")); // Lấy ID từ request
-        OrderDetail orderDetail = orderDetailService.findById(id); // Truy vấn dữ liệu từ DB
-        System.out.println("Editing OrderDetail with ID: " + request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id"));
+        OrderDetail orderDetail = orderDetailService.findById(id);
+        System.out.println("Editing OrderDetail with ID: " + id);
         request.setAttribute("orderDetail", orderDetail);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/order/edit_orderDetails.jsp");
         dispatcher.forward(request, response);
@@ -100,13 +110,12 @@ public class OrderDetailController extends HttpServlet {
             action = "";
         }
         switch (action){
-            case "update" :
+            case "update":
                 updateOrderDetail(request, response);
                 break;
-            case "create" :
-                insertOrderDetails(request,response);
+            case "create":
+                insertOrderDetails(request, response);
                 break;
-
         }
     }
 
@@ -129,8 +138,6 @@ public class OrderDetailController extends HttpServlet {
         response.sendRedirect("orderDetails?action=list");
     }
 
-
-
     private void insertOrderDetails(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int bookId = Integer.parseInt(request.getParameter("bookId"));
         String fullName = request.getParameter("fullName");
@@ -148,5 +155,3 @@ public class OrderDetailController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/view/order/orderpage.jsp").forward(request, response);
     }
 }
-
-

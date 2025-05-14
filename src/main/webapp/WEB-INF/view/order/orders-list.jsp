@@ -1,17 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List" %>
 <%@ page import="model.OrderDetail" %>
-
-<%@ page import="service.impl.OrderDetail.OrderDetailService" %>
 <%@ page import="model.User" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<%
-  OrderDetailService orderDetailService = new OrderDetailService(repository.connection.DBRepository.getConnection());
-  List<OrderDetail> orderDetails = orderDetailService.getAll();
-  request.setAttribute("orderDetails", orderDetails);
-%>
-
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -21,8 +11,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f8f9fa; }
     .container { margin-top: 30px; }
@@ -37,12 +25,10 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-
     .container {
       max-width: 1200px;
       margin: auto;
     }
-
 
     .header-logo {
       height: 60px;
@@ -79,7 +65,6 @@
     .search-btn i {
       font-size: 18px;
     }
-
 
     .header-account {
       text-decoration: none;
@@ -274,8 +259,6 @@
         <% } %>
       </div>
 
-
-
       <% Integer roleId = (Integer) session.getAttribute("roleId"); %>
       <% if (roleId != null && roleId == 1) { %>
       <div class="dropdown">
@@ -291,8 +274,6 @@
       </div>
       <% } %>
 
-
-
       <a href="/orderpage" class="payment">
         <i class="bi bi-cart-fill"></i>
         <span>Thanh toán</span>
@@ -300,7 +281,6 @@
     </div>
   </div>
 </header>
-
 
 <div class="container">
   <h2 class="text-center text-primary">Quản Lý Chi Tiết Đơn Hàng</h2>
@@ -350,18 +330,14 @@
           <td>${orderDetail.paymentMethod}</td>
           <td>
             <span class="${orderDetail.status eq 'Đang xử lý' ? 'status-processing'
-                          : (orderDetail.status eq 'Đã xử lý ' ? 'status-delivered'
-                          : 'status-cancelled')}">
+                          : 'status-delivered'}">
                 ${orderDetail.status}
             </span>
           </td>
           <td>
-            <button class="btn btn-warning btn-sm editBtn">
-                <a href="orderDetails?action=edit&id=${orderDetail.id}" class="btn btn-warning btn-sm">
-                  Sửa
-                </a>
-            </button>
-
+            <a href="orderDetails?action=edit&id=${orderDetail.id}" class="btn btn-warning btn-sm">
+              Sửa
+            </a>
             <a href="orderDetails?action=delete&id=${orderDetail.id}" class="btn btn-danger btn-sm"
                onclick="return confirm('Bạn có chắc chắn muốn xóa chi tiết đơn hàng này?')">
               Xóa
@@ -374,12 +350,52 @@
   </div>
 </div>
 
-
-</body>
 <script>
   function toggleDropdown() {
     var menu = document.querySelector(".dropdown-menu");
     menu.classList.toggle("show");
   }
+
+  // Chức năng tìm kiếm
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById('searchInput');
+    filter = input.value.toUpperCase();
+    table = document.getElementById('orderTable');
+    tr = table.getElementsByTagName('tr');
+
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName('td')[2]; // Index 2 là cột tên khách hàng
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  });
+
+  // Chức năng lọc theo trạng thái
+  document.getElementById('statusFilter').addEventListener('change', function() {
+    var filter, table, tr, td, i, txtValue;
+    filter = this.value;
+    table = document.getElementById('orderTable');
+    tr = table.getElementsByTagName('tr');
+
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName('td')[9]; // Index 9 là cột trạng thái
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (filter === '' || txtValue.indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  });
 </script>
+</body>
 </html>

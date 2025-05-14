@@ -1,7 +1,6 @@
 package dao;
 
 import model.User;
-import org.mindrot.jbcrypt.BCrypt;
 import repository.connection.DBRepository;
 
 import java.sql.Connection;
@@ -20,10 +19,34 @@ public class UserDAO {
             "SELECT id, username, password, email, role_id, status FROM users WHERE username = ?";
 
     private static final String GET_ALL_USERS =
-            "SELECT id, username, email, role_id FROM users WHERE status = 1"; // Chỉ lấy user chưa bị xóa
+            "SELECT id, username, email, role_id FROM users WHERE status = 1";
 
-    private static final String UPDATE_USER_STATUS =
-            "UPDATE users SET status = ? WHERE id = ?";
+    // Xóa mềm user (Cập nhật status = 0) hoặc khôi phục (status = 1)
+    public static void updateStatus(int userId, int status) {
+        String sql = "UPDATE users SET status = ? WHERE id = ?";
+        try (Connection conn = DBRepository.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Thêm debug log
+            System.out.println("Executing SQL: UPDATE users SET status = " + status + " WHERE id = " + userId);
+
+            stmt.setInt(1, status);
+            stmt.setInt(2, userId);
+            int rowsAffected = stmt.executeUpdate();
+
+            // Thêm debug log
+            System.out.println("Rows affected: " + rowsAffected);
+
+            if (rowsAffected == 0) {
+                LOGGER.warning("User with ID " + userId + " not found or status not updated");
+            } else {
+                LOGGER.info("User with ID " + userId + " status updated to " + status);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error updating user status: ", e);
+            e.printStackTrace();
+        }
+    }
 
     public User getUserByUsername(String username) {
         User user = null;
@@ -33,11 +56,11 @@ public class UserDAO {
 
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next() && rs.getInt("status") == 1) { // Chỉ lấy user chưa bị xóa
+                if (rs.next()) {
                     user = new User(
                             rs.getInt("id"),
                             rs.getString("username"),
-                            rs.getString("password"), // Mật khẩu đã mã hóa
+                            rs.getString("password"),
                             rs.getString("email"),
                             rs.getInt("role_id"),
                             rs.getInt("status")
@@ -50,14 +73,12 @@ public class UserDAO {
         return user;
     }
 
-
-
     public User getUserByUsernameAndPassword(String username, String password) {
         User user = getUserByUsername(username);
-        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            return user; // Đúng tài khoản & mật khẩu
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
         }
-        return null; // Sai mật khẩu hoặc tài khoản không tồn tại
+        return null;
     }
 
     public List<User> getAllUsers() {
@@ -71,10 +92,10 @@ public class UserDAO {
                 users.add(new User(
                         rs.getInt("id"),
                         rs.getString("username"),
-                        null, // Không trả về mật khẩu
+                        null,
                         rs.getString("email"),
                         rs.getInt("role_id"),
-                        1 
+                        1
                 ));
             }
         } catch (SQLException e) {
@@ -83,28 +104,28 @@ public class UserDAO {
         return users;
     }
 
-    // Xóa mềm user (Cập nhật status = 0)
-    public void removeUser(int userId) {
-        updateUserStatus(userId, 0);
-    }
+    private static final String GET_ALL_USERS_WITH_STATUS =
+            "SELECT id, username, email, role_id, status FROM users";
 
-    // Khôi phục user (Cập nhật status = 1)
-    public void restoreUser(int userId) {
-        updateUserStatus(userId, 1);
-    }
-
-    private void updateUserStatus(int userId, int status) {
+    public static List<User> getAllUsersWithStatus() {
+        List<User> users = new ArrayList<>();
         try (Connection conn = DBRepository.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(UPDATE_USER_STATUS)) {
+             PreparedStatement stmt = conn.prepareStatement(GET_ALL_USERS_WITH_STATUS);
+             ResultSet rs = stmt.executeQuery()) {
 
-            stmt.setInt(1, status);
-            stmt.setInt(2, userId);
-            stmt.executeUpdate();
+            while (rs.next()) {
+                users.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        null,
+                        rs.getString("email"),
+                        rs.getInt("role_id"),
+                        rs.getInt("status")
+                ));
+            }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Lỗi khi cập nhật trạng thái user: ", e);
+            LOGGER.log(Level.SEVERE, "Lỗi khi lấy tất cả user: ", e);
         }
+        return users;
     }
-
-
-
 }

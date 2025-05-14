@@ -14,82 +14,35 @@ public class OrderDetail {
     private String street;
     private String noteOrder;
     private double price;
-
-    public OrderDetail(int id, String fullName, String email,  String phoneNumber,String provinceCity, String district, String ward, String street, String noteOrder, double price, String paymentMethod, String status) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.provinceCity = provinceCity;
-        this.phoneNumber = phoneNumber;
-        this.district = district;
-        this.ward = ward;
-        this.street = street;
-        this.noteOrder = noteOrder;
-        this.price = price;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-    }
-
-
-    public OrderDetail(int id, int bookId, int quantity, String fullName, String email, String phoneNumber, String provinceCity, String district, String ward, String street, String noteOrder, double price, String paymentMethod, String status) {
-        this.id = id;
-        this.bookId = bookId;
-        this.quantity = quantity;
-        this.fullName = fullName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.provinceCity = provinceCity;
-        this.district = district;
-        this.ward = ward;
-        this.street = street;
-        this.noteOrder = noteOrder;
-        this.price = price;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-    }
-
     private String paymentMethod;
     private String status;
 
+    // ✅ Constructor không tham số (bắt buộc nếu sử dụng setters)
+    public OrderDetail() {
+    }
 
-
-
-    public OrderDetail(int bookId, String fullName, String email, String phoneNumber, String provinceCity, String ward, String district, String street, String noteOrder, Double price, String paymentMethod) {
+    // ✅ Constructor cho thao tác tạo đơn hàng (insert)
+    public OrderDetail(int bookId, String fullName, String email, String phoneNumber,
+                       String provinceCity, String district, String ward, String street,
+                       String noteOrder, double price, String paymentMethod) {
         this.bookId = bookId;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.provinceCity = provinceCity;
-        this.ward = ward;
         this.district = district;
+        this.ward = ward;
         this.street = street;
         this.noteOrder = noteOrder;
         this.price = price;
         this.paymentMethod = paymentMethod;
     }
 
-
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public OrderDetail(int id, int bookId, String fullName, String email, String phoneNumber, String provinceCity, String district, String ward, String street, String noteOrder, Double price, String paymentMethod, String status) {
+    // ✅ Constructor cho thao tác cập nhật đơn hàng (update)
+    public OrderDetail(int id, String fullName, String email, String phoneNumber,
+                       String provinceCity, String district, String ward, String street,
+                       String noteOrder, double price, String paymentMethod, String status) {
         this.id = id;
-        this.bookId = bookId;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -103,13 +56,7 @@ public class OrderDetail {
         this.status = status;
     }
 
-
-
-    public String getAddress() {
-        return street + ", " + ward + ", " + district + ", " + provinceCity;
-    }
-
-
+    // ✅ GETTERS & SETTERS
 
     public int getId() {
         return id;
@@ -149,6 +96,14 @@ public class OrderDetail {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhoneNumber() {
@@ -199,6 +154,14 @@ public class OrderDetail {
         this.noteOrder = noteOrder;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -213,5 +176,10 @@ public class OrderDetail {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    // ✅ Lấy địa chỉ đầy đủ dưới dạng String
+    public String getAddress() {
+        return street + ", " + ward + ", " + district + ", " + provinceCity;
     }
 }
